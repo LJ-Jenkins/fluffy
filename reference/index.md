@@ -15,6 +15,6 @@
   [`add_cross_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_type_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_coerce_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
-  : Add rules to a Regsitry
+  : Add Rules to a Registry
 - [`show_builtins()`](https://lj-jenkins.github.io/fluffy/reference/show_builtins.md)
-  : Show fluffy builtin rules
+  : Show fluffy Builtin Rules

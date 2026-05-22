@@ -1,4 +1,4 @@
-# Add rules to a Regsitry
+# Add Rules to a Registry
 
 Add validator, schema, (schema) cross, type, or coerce rules to a
 [Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md),

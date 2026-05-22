@@ -217,7 +217,7 @@ r@str_to_fn_converter
 #>         NULL
 #>     })
 #> }
-#> <bytecode: 0x55a5ec53caf8>
+#> <bytecode: 0x56101b8ada70>
 #> <environment: namespace:fluffy>
 
 Schema(
@@ -226,7 +226,7 @@ Schema(
 #> $predicate
 #> function (x) 
 #> x > 10
-#> <environment: 0x55a5edb254b8>
+#> <environment: 0x56101ce97070>
 ```
 
 ### Schema validation and errors
@@ -625,10 +625,11 @@ Validator(
   call("mean", 1:10),
   list(
     type = "call",
+    list(type = "name"),
     list(predicate = "function(x) identical(x, 1:10)")
   )
 )@valid
-#> [1] FALSE
+#> [1] TRUE
 Validator(expression(x + 1), list(type = "expression"))@valid
 #> [1] TRUE
 Validator(table(x = 1), list(type = "table"))@valid

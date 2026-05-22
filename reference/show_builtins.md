@@ -1,4 +1,4 @@
-# Show fluffy builtin rules
+# Show fluffy Builtin Rules
 
 Helper to show the builtin rules in a Registry, and their behaviour.
 
