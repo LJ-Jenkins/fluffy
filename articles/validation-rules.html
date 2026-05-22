@@ -80,9 +80,9 @@
 <span><span class="co">#&gt;  [1] "required"       "default"        "coerce"         "apply"         </span></span>
 <span><span class="co">#&gt;  [5] "type"           "inherits"       "allowed"        "forbidden"     </span></span>
 <span><span class="co">#&gt;  [9] "unique"         "positive"       "negative"       "finite"        </span></span>
-<span><span class="co">#&gt; [13] "allow_na"       "min_val"        "max_val"        "min_length"    </span></span>
-<span><span class="co">#&gt; [17] "max_length"     "min_nrow"       "max_nrow"       "min_nchar"     </span></span>
-<span><span class="co">#&gt; [21] "max_nchar"      "nzchar"         "regex"          "labelled"      </span></span>
+<span><span class="co">#&gt; [13] "allow_na"       "sorted"         "min_val"        "max_val"       </span></span>
+<span><span class="co">#&gt; [17] "min_length"     "max_length"     "min_nrow"       "max_nrow"      </span></span>
+<span><span class="co">#&gt; [21] "min_nchar"      "max_nchar"      "nzchar"         "regex"         </span></span>
 <span><span class="co">#&gt; [25] "levels"         "ordered_levels" "dependency"     "dependencies"  </span></span>
 <span><span class="co">#&gt; [29] "predicate"      "coerce_last"    "apply_last"</span></span></code></pre></div>
 <p>The builtin rules are categorised by their type: ‘control’,
@@ -102,9 +102,9 @@ their respective <code>Registry</code> property.</p>
 <span><span class="va">r</span><span class="op">@</span><span class="va">validate_rules</span></span>
 <span><span class="co">#&gt;  [1] "type"           "inherits"       "allowed"        "forbidden"     </span></span>
 <span><span class="co">#&gt;  [5] "unique"         "positive"       "negative"       "finite"        </span></span>
-<span><span class="co">#&gt;  [9] "allow_na"       "min_val"        "max_val"        "min_length"    </span></span>
-<span><span class="co">#&gt; [13] "max_length"     "min_nrow"       "max_nrow"       "min_nchar"     </span></span>
-<span><span class="co">#&gt; [17] "max_nchar"      "nzchar"         "regex"          "labelled"      </span></span>
+<span><span class="co">#&gt;  [9] "allow_na"       "sorted"         "min_val"        "max_val"       </span></span>
+<span><span class="co">#&gt; [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      </span></span>
+<span><span class="co">#&gt; [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         </span></span>
 <span><span class="co">#&gt; [21] "levels"         "ordered_levels" "dependency"     "dependencies"  </span></span>
 <span><span class="co">#&gt; [25] "predicate"</span></span>
 <span><span class="va">r</span><span class="op">@</span><span class="va">finalize_rules</span></span>
@@ -156,6 +156,13 @@ but apply to a number of common scenarios.</p>
 <div class="section level3">
 <h3 id="rule-information">Rule information<a class="anchor" aria-label="anchor" href="#rule-information"></a>
 </h3>
+<p>fluffy rules that test for behaviour typically employ
+<code>na.rm = TRUE</code> for validation. For example, the
+<code>nchar</code> rule check is implemented like so:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar</a></span><span class="op">(</span><span class="va">field</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">schema_field</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>If you wish to handle <code>NA</code> values differently, you must
+write <a href="custom-rules.html">custom rules</a>.</p>
 <div class="section level4">
 <h4 id="validation-rules-1">Validation rules<a class="anchor" aria-label="anchor" href="#validation-rules-1"></a>
 </h4>
@@ -361,10 +368,23 @@ is finite.
 <code>allow_na</code>
 </td>
 <td style="text-align:left;">
-TRUE.
+FALSE.
 </td>
 <td style="text-align:left;">
 no <code>NA</code> values.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<code>sorted</code>
+</td>
+<td style="text-align:left;">
+TRUE.
+</td>
+<td style="text-align:left;">
+is sorted.
 </td>
 <td style="text-align:left;">
 </td>
@@ -495,19 +515,6 @@ string.
 </td>
 <td style="text-align:left;">
 matches <code>regex</code> pattern.
-</td>
-<td style="text-align:left;">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<code>labelled</code>
-</td>
-<td style="text-align:left;">
-boolean.
-</td>
-<td style="text-align:left;">
-is labelled (has <code>labels</code> attribute).
 </td>
 <td style="text-align:left;">
 </td>

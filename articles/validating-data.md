@@ -128,9 +128,9 @@ r@transform_rules
 r@validate_rules
 #>  [1] "type"           "inherits"       "allowed"        "forbidden"     
 #>  [5] "unique"         "positive"       "negative"       "finite"        
-#>  [9] "allow_na"       "min_val"        "max_val"        "min_length"    
-#> [13] "max_length"     "min_nrow"       "max_nrow"       "min_nchar"     
-#> [17] "max_nchar"      "nzchar"         "regex"          "labelled"      
+#>  [9] "allow_na"       "sorted"         "min_val"        "max_val"       
+#> [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      
+#> [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         
 #> [21] "levels"         "ordered_levels" "dependency"     "dependencies"  
 #> [25] "predicate"
 
@@ -217,7 +217,7 @@ r@str_to_fn_converter
 #>         NULL
 #>     })
 #> }
-#> <bytecode: 0x5573584aea70>
+#> <bytecode: 0x560517b99560>
 #> <environment: namespace:fluffy>
 
 Schema(
@@ -226,7 +226,7 @@ Schema(
 #> $predicate
 #> function (x) 
 #> x > 10
-#> <environment: 0x557359a98070>
+#> <environment: 0x560519182a28>
 ```
 
 ### Schema validation and errors

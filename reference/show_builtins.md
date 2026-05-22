@@ -56,7 +56,8 @@ show_builtins()
 #> |positive      |TRUE.                 |is positive (or zero).|                      |
 #> |negative      |TRUE.                 |is negative (or zero).|                      |
 #> |finite        |TRUE.                 |is finite.            |                      |
-#> |allow_na      |TRUE.                 |no NA values.         |                      |
+#> |allow_na      |FALSE.                |no NA values.         |                      |
+#> |sorted        |TRUE.                 |is sorted.            |                      |
 #> |min_val       |finite numeric value. |values at least mi ...|                      |
 #> |max_val       |finite numeric value. |values at most max ...|                      |
 #> |min_length    |positive integeris ...|length at least mi ...|                      |
@@ -67,7 +68,6 @@ show_builtins()
 #> |max_nchar     |positive integeris ...|nchar at most max_ ...|                      |
 #> |nzchar        |boolean.              |no empty strings.     |                      |
 #> |regex         |string.               |matches regex pattern.|                      |
-#> |labelled      |boolean.              |is labelled (has l ...|                      |
 #> |levels        |character vector.     |has levels matchin ...|                      |
 #> |ordered_levels|character vector.     |has levels matchin ...|                      |
 #> |dependency    |character vector,  ...|dependency field p ...|                      |

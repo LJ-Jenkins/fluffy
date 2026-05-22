@@ -15,9 +15,9 @@ Registry()@rule_names
 #>  [1] "required"       "default"        "coerce"         "apply"         
 #>  [5] "type"           "inherits"       "allowed"        "forbidden"     
 #>  [9] "unique"         "positive"       "negative"       "finite"        
-#> [13] "allow_na"       "min_val"        "max_val"        "min_length"    
-#> [17] "max_length"     "min_nrow"       "max_nrow"       "min_nchar"     
-#> [21] "max_nchar"      "nzchar"         "regex"          "labelled"      
+#> [13] "allow_na"       "sorted"         "min_val"        "max_val"       
+#> [17] "min_length"     "max_length"     "min_nrow"       "max_nrow"      
+#> [21] "min_nchar"      "max_nchar"      "nzchar"         "regex"         
 #> [25] "levels"         "ordered_levels" "dependency"     "dependencies"  
 #> [29] "predicate"      "coerce_last"    "apply_last"
 ```
@@ -41,9 +41,9 @@ r@transform_rules
 r@validate_rules
 #>  [1] "type"           "inherits"       "allowed"        "forbidden"     
 #>  [5] "unique"         "positive"       "negative"       "finite"        
-#>  [9] "allow_na"       "min_val"        "max_val"        "min_length"    
-#> [13] "max_length"     "min_nrow"       "max_nrow"       "min_nchar"     
-#> [17] "max_nchar"      "nzchar"         "regex"          "labelled"      
+#>  [9] "allow_na"       "sorted"         "min_val"        "max_val"       
+#> [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      
+#> [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         
 #> [21] "levels"         "ordered_levels" "dependency"     "dependencies"  
 #> [25] "predicate"
 r@finalize_rules
@@ -101,6 +101,17 @@ Schema(
 ```
 
 ### Rule information
+
+fluffy rules that test for behaviour typically employ `na.rm = TRUE` for
+validation. For example, the `nchar` rule check is implemented like so:
+
+``` r
+
+any(nchar(field) > schema_field, na.rm = TRUE)
+```
+
+If you wish to handle `NA` values differently, you must write [custom
+rules](https://lj-jenkins.github.io/fluffy/articles/custom-rules.md).
 
 #### Validation rules
 
