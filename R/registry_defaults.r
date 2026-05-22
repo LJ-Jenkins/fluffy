@@ -686,7 +686,7 @@
 #-- helper
 
 #' @title
-#' Show fluffy builtin rules
+#' Show fluffy Builtin Rules
 #' @description
 #' Helper to show the builtin rules in a Registry, and their behaviour.
 #' @param rules

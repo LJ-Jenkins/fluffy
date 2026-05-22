@@ -1,5 +1,5 @@
 #' @title
-#' Add rules to a Regsitry
+#' Add Rules to a Registry
 #' @description
 #' Add validator, schema, (schema) cross, type, or coerce rules to a
 #' [Registry], [Schema], or [Validator] object.

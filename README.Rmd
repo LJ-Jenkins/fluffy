@@ -13,7 +13,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-# fluffy
+# fluffy <a href="https://lj-jenkins.github.io/fluffy/"><img src="man/figures/logo.png" align="right" height="138" alt="fluffy website" /></a>
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/LJ-Jenkins/fluffy/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/LJ-Jenkins/fluffy/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 Validate R objects against user-defined schemas, with informative errors and data transformation.
 
@@ -52,16 +56,16 @@ v <- Validator(
   )
 )
 
-# Specified data is transformed
+#- Specified data is transformed
 v@data
 
-# Overall validity
+#- Overall validity
 v@valid
 
-# Structured errors property
+#- Structured errors property
 v@errors
 
-# Informative errors that reflect the perceived data structure
+#- Informative errors that reflect the perceived data structure
 Validator(
   data = list(1, a = "a", b = 10, x = -1),
   schema = list(
@@ -74,7 +78,7 @@ Validator(
   error = TRUE
 )
 
-# Transformed data can be accessed during the validation
+#- Transformed data can be accessed during the validation
 Validator(
   data = list(a = 1, b = 1),
   schema = list(
@@ -83,7 +87,7 @@ Validator(
   )
 )@data
 
-# Extensible
+#- Extensible
 s <- Schema(list(double_if_five_else_error = TRUE))
 s@valid
 s@errors
@@ -116,11 +120,13 @@ v@valid
 v@data
 Validator(data = 1, schema = s, error = TRUE)
 
-# Works on numerous non-empty R object types, with data elements able to be validated if they can accessed with `[[`.
+#- Works on numerous non-empty R object types, with data elements able to be
+# validated if they can be accessed with `[[`.
 Validator(
   call("mean", 1:10),
   list(
     type = "call",
+    list(type = "name"),
     list(predicate = "function(x) identical(x, 1:10)")
   )
 )@valid
@@ -196,7 +202,7 @@ v@data
 S7::prop_names(v)
 ```
 
-With list schemas and list/data.frame/atomic vector data, fluffy can be used on a range of data types once loaded into R.
+Using list schemas but virtually any R type for validation, fluffy can be used on a range of data types once loaded into R.
 ```{r data types example, error=TRUE}
 yaml_schema <- yaml::yaml.load(
   "
@@ -288,7 +294,7 @@ For detailed information on using fluffy, see the vignettes:
 
 ## Note
 
-fluffy was inspired by and modelled on Python's [Cerberus](https://docs.python-cerberus.org/) (hence the name!). Error printing in fluffy was modelled on [lobstr](https://lobstr.r-lib.org/)'s tree function.
+fluffy was inspired by and modelled on Python's [Cerberus](https://docs.python-cerberus.org/) (hence the name!). Error printing in fluffy was modelled on [lobstr](https://lobstr.r-lib.org/)'s tree function. fluffy was originally called 'RV' but was renamed to distinguish itself from the [rv package manager for R](https://github.com/A2-ai/rv).
 
 ## Getting help
 

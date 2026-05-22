@@ -2,7 +2,7 @@
 % Please edit documentation in R/registry_defaults.r
 \name{show_builtins}
 \alias{show_builtins}
-\title{Show fluffy builtin rules}
+\title{Show fluffy Builtin Rules}
 \usage{
 show_builtins(rules = c("all", "validation", "cross"))
 }

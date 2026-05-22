@@ -5,7 +5,7 @@
 \alias{add_cross_rule}
 \alias{add_type_rule}
 \alias{add_coerce_rule}
-\title{Add rules to a Regsitry}
+\title{Add Rules to a Registry}
 \usage{
 add_rule(
   obj,

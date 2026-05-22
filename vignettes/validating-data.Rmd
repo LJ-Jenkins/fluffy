@@ -416,6 +416,7 @@ Validator(
   call("mean", 1:10),
   list(
     type = "call",
+    list(type = "name"),
     list(predicate = "function(x) identical(x, 1:10)")
   )
 )@valid
