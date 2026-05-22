@@ -6,6 +6,8 @@
 \alias{fluffy-package}
 \title{fluffy: Schema-Based Validation of R Objects With User-Defined Rules}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 A schema-based validation framework for R objects using user-defined rules. Provides three S7 classes 'Registry', 'Schema', and 'Validator' to manage rules, define list-based schemas, and validate data in a flexible and extensible manner.
 }
 \seealso{

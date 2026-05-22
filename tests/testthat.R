@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(RV)
+library(fluffy)
 
-test_check("RV")
+test_check("fluffy")
