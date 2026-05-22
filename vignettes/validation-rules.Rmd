@@ -74,6 +74,14 @@ Schema(
 
 ### Rule information
 
+fluffy rules that test for behaviour typically employ `na.rm = TRUE` for validation. For example, the `nchar` rule check is implemented like so:
+
+```{r, nchar rule example, eval=FALSE}
+any(nchar(field) > schema_field, na.rm = TRUE)
+```
+
+If you wish to handle `NA` values differently, you must write [custom rules](custom-rules.html).
+
 #### Validation rules
 
 ```{r, validation rules table, echo=FALSE, results='asis'}

@@ -4,9 +4,9 @@
 
 .fl_validate_rules <- c(
   "type", "inherits", "allowed", "forbidden", "unique", "positive", "negative",
-  "finite", "allow_na",
+  "finite", "allow_na", "sorted",
   "min_val", "max_val", "min_length", "max_length", "min_nrow", "max_nrow",
-  "min_nchar", "max_nchar", "nzchar", "regex", "labelled", "levels",
+  "min_nchar", "max_nchar", "nzchar", "regex", "levels",
   "ordered_levels", "dependency", "dependencies", "predicate"
 )
 
@@ -247,6 +247,7 @@
     negative = .fl_schema_true_rule,
     finite = .fl_schema_true_rule,
     allow_na = .fl_schema_false_rule,
+    sorted = .fl_schema_true_rule,
     min_val = .fl_schema_scalar_numeric_rule,
     max_val = .fl_schema_scalar_numeric_rule,
     min_length = .fl_schema_positive_scalar_integerish_rule,
@@ -257,7 +258,6 @@
     max_nchar = .fl_schema_positive_scalar_integerish_rule,
     nzchar = .fl_schema_true_rule,
     regex = .fl_schema_nz_string_rule,
-    labelled = .fl_schema_bool_rule,
     levels = .fl_schema_chr_rule,
     ordered_levels = .fl_schema_chr_rule,
     coerce = .fl_schema_coerce_rule,
@@ -487,6 +487,14 @@
   }
 }
 
+.fl_validator_sorted_rule <- function(field, schema_field, ...) {
+  if (!is.atomic(field)) {
+    list(error = "Must be an atomic type.")
+  } else if (is.unsorted(field, na.rm = TRUE)) {
+    list(error = "Values are not sorted.")
+  }
+}
+
 .fl_validator_min_val_rule <- function(field, schema_field, ...) {
   if (any(field < schema_field, na.rm = TRUE)) {
     list(error = paste0("Value(s) must be at least ", schema_field, "."))
@@ -564,14 +572,6 @@
         "String(s) do not match regex pattern `", schema_field, "`."
       )
     )
-  }
-}
-
-.fl_validator_labelled_rule <- function(field, schema_field, ...) {
-  if (schema_field && is.null(attr(field, "labels"))) {
-    list(error = "No labels present.")
-  } else if (!schema_field && !is.null(attr(field, "labels"))) {
-    list(error = "Labels present.")
   }
 }
 
@@ -659,6 +659,7 @@
     negative = .fl_validator_negative_rule,
     finite = .fl_validator_finite_rule,
     allow_na = .fl_validator_allow_na_rule,
+    sorted = .fl_validator_sorted_rule,
     min_val = .fl_validator_min_val_rule,
     max_val = .fl_validator_max_val_rule,
     min_length = .fl_validator_min_length_rule,
@@ -669,7 +670,6 @@
     max_nchar = .fl_validator_max_nchar_rule,
     nzchar = .fl_validator_nzchar_rule,
     regex = .fl_validator_regex_rule,
-    labelled = .fl_validator_labelled_rule,
     levels = .fl_validator_levels_rule,
     ordered_levels = .fl_validator_ordered_levels_rule,
     coerce = .fl_validator_coerce_rule,
@@ -713,9 +713,9 @@ show_builtins <- function(rules = c("all", "validation", "cross")) {
     "required", "default", "apply", "coerce",
     "type", "inherits", "allowed", "forbidden",
     "unique", "positive", "negative", "finite",
-    "allow_na", "min_val", "max_val", "min_length",
+    "allow_na", "sorted", "min_val", "max_val", "min_length",
     "max_length", "min_nrow", "max_nrow", "min_nchar",
-    "max_nchar", "nzchar", "regex", "labelled",
+    "max_nchar", "nzchar", "regex",
     "levels", "ordered_levels", "dependency", "dependencies",
     "predicate", "apply_last", "coerce_last"
   )
@@ -733,6 +733,7 @@ show_builtins <- function(rules = c("all", "validation", "cross")) {
     "TRUE.",
     "TRUE.",
     "TRUE.",
+    "FALSE.",
     "TRUE.",
     "finite numeric value.",
     "finite numeric value.",
@@ -744,7 +745,6 @@ show_builtins <- function(rules = c("all", "validation", "cross")) {
     "positive integerish value.",
     "boolean.",
     "string.",
-    "boolean.",
     "character vector.",
     "character vector.",
     "character vector, or integerish vector, or list of string/integerish scalars.",
@@ -768,6 +768,7 @@ show_builtins <- function(rules = c("all", "validation", "cross")) {
     "is negative (or zero).",
     "is finite.",
     "no `NA` values.",
+    "is sorted.",
     "values at least `min_val`.",
     "values at most `max_val`.",
     "length at least `min_length`.",
@@ -778,7 +779,6 @@ show_builtins <- function(rules = c("all", "validation", "cross")) {
     "nchar at most `max_nchar`.",
     "no empty strings.",
     "matches `regex` pattern.",
-    "is labelled (has `labels` attribute).",
     "has levels matching `levels` in any order.",
     "has levels matching `ordered_levels` in order.",
     "dependency field present.",
