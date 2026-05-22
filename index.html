@@ -55,9 +55,12 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="fluffy">fluffy<a class="anchor" aria-label="anchor" href="#fluffy"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="fluffy-">fluffy 
+<a class="anchor" aria-label="anchor" href="#fluffy-"></a>
 </h1>
 </div>
+<!-- badges: start -->
+
 <p>Validate R objects against user-defined schemas, with informative errors and data transformation.</p>
 <p>This package is under development and subject to change constantly.</p>
 <div class="section level2">
@@ -93,18 +96,18 @@
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Specified data is transformed</span></span>
+<span><span class="co">#- Specified data is transformed</span></span>
 <span><span class="va">v</span><span class="op">@</span><span class="va">data</span></span>
 <span><span class="co">#&gt;   x y</span></span>
 <span><span class="co">#&gt; 1 1 a</span></span>
 <span><span class="co">#&gt; 2 2 b</span></span>
 <span><span class="co">#&gt; 3 3 c</span></span>
 <span></span>
-<span><span class="co"># Overall validity</span></span>
+<span><span class="co">#- Overall validity</span></span>
 <span><span class="va">v</span><span class="op">@</span><span class="va">valid</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span></span>
-<span><span class="co"># Structured errors property</span></span>
+<span><span class="co">#- Structured errors property</span></span>
 <span><span class="va">v</span><span class="op">@</span><span class="va">errors</span></span>
 <span><span class="co">#&gt; $type</span></span>
 <span><span class="co">#&gt; NULL</span></span>
@@ -130,7 +133,7 @@
 <span><span class="co">#&gt; $y$nzchar</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span></span>
-<span><span class="co"># Informative errors that reflect the perceived data structure</span></span>
+<span><span class="co">#- Informative errors that reflect the perceived data structure</span></span>
 <span><span class="fu"><a href="reference/Validator.html">Validator</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span>, a <span class="op">=</span> <span class="st">"a"</span>, b <span class="op">=</span> <span class="fl">10</span>, x <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>  schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -156,7 +159,7 @@
 <span><span class="co">#&gt; └─ x</span></span>
 <span><span class="co">#&gt;   └─ positive: Value(s) must be positive (or zero).</span></span>
 <span></span>
-<span><span class="co"># Transformed data can be accessed during the validation</span></span>
+<span><span class="co">#- Transformed data can be accessed during the validation</span></span>
 <span><span class="fu"><a href="reference/Validator.html">Validator</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -170,7 +173,7 @@
 <span><span class="co">#&gt; $b</span></span>
 <span><span class="co">#&gt; [1] 2</span></span>
 <span></span>
-<span><span class="co"># Extensible</span></span>
+<span><span class="co">#- Extensible</span></span>
 <span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/Schema.html">Schema</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>double_if_five_else_error <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">s</span><span class="op">@</span><span class="va">valid</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span>
@@ -213,15 +216,17 @@
 <span><span class="co">#&gt; - Data validation failed with the following errors:</span></span>
 <span><span class="co">#&gt; └─ double_if_five_else_error: Does not equal 5.</span></span>
 <span></span>
-<span><span class="co"># Works on numerous non-empty R object types, with data elements able to be validated if they can accessed with `[[`.</span></span>
+<span><span class="co">#- Works on numerous non-empty R object types, with data elements able to be</span></span>
+<span><span class="co"># validated if they can be accessed with `[[`.</span></span>
 <span><span class="fu"><a href="reference/Validator.html">Validator</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/call.html" class="external-link">call</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    type <span class="op">=</span> <span class="st">"call"</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>predicate <span class="op">=</span> <span class="st">"function(x) identical(x, 1:10)"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">@</span><span class="va">valid</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
 <span><span class="fu"><a href="reference/Validator.html">Validator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"expression"</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">valid</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span><span class="fu"><a href="reference/Validator.html">Validator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"table"</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">valid</span></span>
@@ -314,7 +319,7 @@
 <span><span class="fu">S7</span><span class="fu">::</span><span class="fu"><a href="https://rconsortium.github.io/S7/reference/prop_names.html" class="external-link">prop_names</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "data"             "Schema"           "errors"           ".validator_cache"</span></span>
 <span><span class="co">#&gt; [5] "error"            "valid"</span></span></code></pre></div>
-<p>With list schemas and list/data.frame/atomic vector data, fluffy can be used on a range of data types once loaded into R.</p>
+<p>Using list schemas but virtually any R type for validation, fluffy can be used on a range of data types once loaded into R.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">yaml_schema</span> <span class="op">&lt;-</span> <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://yaml.r-lib.org/reference/yaml.load.html" class="external-link">yaml.load</a></span><span class="op">(</span></span>
 <span>  <span class="st">"</span></span>
@@ -428,7 +433,7 @@
 <div class="section level2">
 <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a>
 </h2>
-<p>fluffy was inspired by and modelled on Python’s <a href="https://docs.python-cerberus.org/" class="external-link">Cerberus</a> (hence the name!). Error printing in fluffy was modelled on <a href="https://lobstr.r-lib.org/" class="external-link">lobstr</a>’s tree function.</p>
+<p>fluffy was inspired by and modelled on Python’s <a href="https://docs.python-cerberus.org/" class="external-link">Cerberus</a> (hence the name!). Error printing in fluffy was modelled on <a href="https://lobstr.r-lib.org/" class="external-link">lobstr</a>‘s tree function. fluffy was originally called ’RV’ but was renamed to distinguish itself from the <a href="https://github.com/A2-ai/rv" class="external-link">rv package manager for R</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
@@ -470,7 +475,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/LJ-Jenkins/fluffy/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/LJ-Jenkins/fluffy/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

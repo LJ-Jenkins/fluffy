@@ -40,18 +40,18 @@ v <- Validator(
   )
 )
 
-# Specified data is transformed
+#- Specified data is transformed
 v@data
 #>   x y
 #> 1 1 a
 #> 2 2 b
 #> 3 3 c
 
-# Overall validity
+#- Overall validity
 v@valid
 #> [1] TRUE
 
-# Structured errors property
+#- Structured errors property
 v@errors
 #> $type
 #> NULL
@@ -77,7 +77,7 @@ v@errors
 #> $y$nzchar
 #> NULL
 
-# Informative errors that reflect the perceived data structure
+#- Informative errors that reflect the perceived data structure
 Validator(
   data = list(1, a = "a", b = 10, x = -1),
   schema = list(
@@ -103,7 +103,7 @@ Validator(
 #> └─ x
 #>   └─ positive: Value(s) must be positive (or zero).
 
-# Transformed data can be accessed during the validation
+#- Transformed data can be accessed during the validation
 Validator(
   data = list(a = 1, b = 1),
   schema = list(
@@ -117,7 +117,7 @@ Validator(
 #> $b
 #> [1] 2
 
-# Extensible
+#- Extensible
 s <- Schema(list(double_if_five_else_error = TRUE))
 s@valid
 #> [1] FALSE
@@ -160,15 +160,17 @@ Validator(data = 1, schema = s, error = TRUE)
 #> - Data validation failed with the following errors:
 #> └─ double_if_five_else_error: Does not equal 5.
 
-# Works on numerous non-empty R object types, with data elements able to be validated if they can accessed with `[[`.
+#- Works on numerous non-empty R object types, with data elements able to be
+# validated if they can be accessed with `[[`.
 Validator(
   call("mean", 1:10),
   list(
     type = "call",
+    list(type = "name"),
     list(predicate = "function(x) identical(x, 1:10)")
   )
 )@valid
-#> [1] FALSE
+#> [1] TRUE
 Validator(expression(x + 1), list(type = "expression"))@valid
 #> [1] TRUE
 Validator(table(x = 1), list(type = "table"))@valid
@@ -288,8 +290,8 @@ S7::prop_names(v)
 #> [5] "error"            "valid"
 ```
 
-With list schemas and list/data.frame/atomic vector data, fluffy can be
-used on a range of data types once loaded into R.
+Using list schemas but virtually any R type for validation, fluffy can
+be used on a range of data types once loaded into R.
 
 ``` r
 
@@ -409,8 +411,10 @@ For detailed information on using fluffy, see the vignettes:
 
 fluffy was inspired by and modelled on Python’s
 [Cerberus](https://docs.python-cerberus.org/) (hence the name!). Error
-printing in fluffy was modelled on [lobstr](https://lobstr.r-lib.org/)’s
-tree function.
+printing in fluffy was modelled on [lobstr](https://lobstr.r-lib.org/)‘s
+tree function. fluffy was originally called ’RV’ but was renamed to
+distinguish itself from the [rv package manager for
+R](https://github.com/A2-ai/rv).
 
 ## Getting help
 
