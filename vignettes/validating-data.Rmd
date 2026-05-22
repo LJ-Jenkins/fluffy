@@ -1,0 +1,436 @@
+---
+title: "Creating Schemas and Validating Data"
+output: rmarkdown::html_vignette
+description: >
+  Create schemas that align with your data, trasnforming and validating them.
+vignette: >
+  %\VignetteIndexEntry{Creating Schemas and Validating Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(fluffy)
+```
+
+fluffy schemas are nested list objects that are passed to the `Schema` class. The class automatically re-orders and validates schema before it is supplied to the`Validator` class for data validation. During validation, the schema definition determines the data matching and rule application. As a result, understanding schemas is central to using fluffy effectively. Most of this vignette focuses on constructing schemas, with the final section demonstrating how to use them for data validation.
+
+### Creating a schema list
+
+The lists used for fluffy schemas are nested list objects with rule-named leaf elements that determine validation behaviour. The names or positions of the nested lists are used to match their rules to the corresponding data elements.
+
+```{r schema example, eval=FALSE}
+list(
+  type = "data.frame",
+  id = list(
+    type = "numeric"
+  ),
+  email = list(
+    type = "character",
+    regex = "@gmail.com$"
+  ),
+  list(
+    min_length = 2
+  )
+)
+```
+
+Rules at the top level of the nested list are applied to the whole data object. Nested list elements are matched to data elements by their name if present or by position if there is no name present. 
+
+When matching by position, rule elements are first removed, so the first non-rule element will always be matched against `[[1]]` of the matching data node. See the following illustrations:
+
+```{r 1 level above basic example, echo = FALSE}
+lobstr::tree(list(
+  "Top level rule" = "Applied to `data`.",
+  list(
+    "Depth 1 rule" = "Applied to `data[[1]]`.",
+    list(
+      "Depth 2 rule" = "Applied to `data[[1]][[1]]`."
+    )
+  )
+))
+```
+```{r 1 level above basic named example, echo = FALSE}
+lobstr::tree(list(
+  "Top level rule" = "Applied to `data`.",
+  "x" = list(
+    "Depth 1 rule" = "Applied to `data[['x']]`.",
+    "x" = list(
+      "Depth 2 rule" = "Applied to `data[['x']][['x']]`."
+    )
+  )
+))
+```
+
+This behaviour continues no matter the level of nesting, so it is possible to apply rules to deeply nested values.
+
+```{r 1 level above deeply nested example, echo = FALSE}
+lobstr::tree(list(list(list(list("Applied to `data[[1]][[1]][[1]]`.")))))
+```
+
+#### Double hits with positional matching
+
+When matching schema elements to data, the `Validator` first attempts to match by name before falling back to positional matching. As data elements are not flagged when validated (and thus can be validated multiple times), this can cause unexpected behaviour. See the following example where the data is matched twice:
+
+```{r double hit example}
+Validator(
+  data = list(x = 1L),
+  schema = list(
+    list(type = "integer"), # matched positionally
+    x = list(type = "character") # matched by name to same element
+  )
+)@errors
+```
+
+It is strongly encouraged to use fully named schemas/data unless you are certain about their structure.
+
+### Using the Schema class
+
+The `Schema` class takes the nested list and re-orders it, transforms certain rules from strings to functions where necessary, then validates the schema.
+
+#### Schema re-ordering
+
+Rules are applied in four separate passes according to their category: 'control', 'transform', 'validate' and 'finalize'. The 'finalize' pass behaves slightly differently to the others, in that rules in this group are only applied if there are no errors from the previous passes in that schema node.
+
+For each category, the `Schema` reorders the list upon ingest according to the corresponding orders of the name properties in the `Registry` (by default `Schema` uses a default, uncustomised `Registry` if one is not provided):
+
+```{r rule order}
+r <- Registry()
+r@control_rules
+r@transform_rules
+r@validate_rules
+
+Schema(
+  list(
+    min_length = 2L,
+    type = "integer",
+    default = 10L,
+    coerce = "double"
+  )
+)@schema
+```
+
+The order of the rules within each of the `Registry` properties can be edited to specify a different order, which can then be fed to the `Schema`:
+
+```{r rule order edited}
+r <- Registry()
+r@validate_rules <- c("min_length", r@validate_rules[!grepl("min_length", r@validate_rules)])
+
+Schema(
+  schema = list(
+    min_length = 2L,
+    type = "integer",
+    default = 10L,
+    coerce = "double"
+  ),
+  registry = r
+)@schema
+```
+
+For more information about the builtin rules and how they operate, or how to add custom rules to a `Registry`, see the [builtin rules vignette](validation-rules.html) and the [custom rules vignette](custom-rules.html).
+
+#### String to function conversion
+
+Certain rules can be given character strings as an input which are turned into functions during schema validation. The rules that this apply to can be found in the `Registry`, along with the function that does the conversion. Both can be edited.
+
+BEWARE: No check is made on the content of the string, so use the builtin converter with extreme care for user inputs - it is vulnerable to code injection. This functionality can be removed by simply making the `@str_to_fn_rules` property an empty character.
+
+```{r str2func example}
+r <- Registry()
+r@str_to_fn_rules
+
+r@str_to_fn_converter
+
+Schema(
+  list(predicate = "function(x) x > 10")
+)@schema
+```
+
+### Schema validation and errors
+
+`Schema` objects validate their list input and store an `@errors` property that highlights validation errors.
+
+The `@errors` list mirrors the structure of the input schema list with `NULL` elements where the schema is valid and error messages where the schema is invalid:
+
+```{r schema errors example}
+Schema(
+  list(
+    type = "not a type",
+    list(apply = 1),
+    list(type = "character"),
+    list(a = list(min_length = function(x) x + 1))
+  )
+)@errors
+```
+
+This can be used by the user in their own error messages, or if the `@error` property is set to `TRUE`, an error will occur with the non-null elements forming the message (with possible truncation according to the `@error_print_opts`), see below.
+
+Note: the error messages from the `Validator` instead show the locations of the data that failed validation, see the 'Errors' section of 'Data validation' below.
+
+#### Schema nodes
+
+For each schema node `Schema` validates that:
+
+* There are no duplicate names.
+* All leaf elements are named.
+* Leaf elements are named with recognised rules.
+
+```{r schema validation, error=TRUE}
+Schema(
+  list(
+    x = list(type = "character"),
+    x = list(type = "integer"),
+    list("character"),
+    list(my_rule = 1L)
+  ),
+  error = TRUE
+)
+```
+
+#### Rule validation
+
+Each rule has an associated schema validation rule that checks the value given. For example, the 'predicate' rule checks that given values are either strings or functions. The 'dependency' rule checks that given values are either a character vector (names), a numeric integerish vector, or a non-nested list containing a mix of the two.
+
+```{r schema rule validation, error=TRUE}
+Schema(
+  list(
+    predicate = 1L,
+    dependency = 1.5
+  ),
+  error = TRUE
+)
+```
+
+#### Cross rule validation
+
+There are also cross rules that check if the values of multiple rules clash (if the individual rule components are themselves valid). For example the 'min_val_larger_than_max_val' rule does what it says on the tin:
+
+```{r cross rule example, error=TRUE}
+Schema(
+  list(
+    min_val = 5,
+    max_val = 1
+  ),
+  error = TRUE
+)
+```
+
+### Data validation
+
+Data validation in fluffy is undertaken with the `Validator` class, which ingests a `Schema` and applies the rules within to the input data.
+
+### Validation process
+
+`Validator` walks through the `Schema` list object, matching data elements by name or position and applying the rule-based behaviour.
+
+#### Order of evaluation
+
+The validation walk sequences along each schema node and recurses into list elements - following this basic pattern:
+
+```{r evaluation order example, eval=FALSE}
+recursive_walk <- function(lst) {
+  for (i in seq_along(lst)) {
+    if (!is.list(lst[[i]])) {
+      # do rule...
+    } else {
+      # recurse into list node...
+      lst[[i]] <- recursive_walk(lst[[i]])
+    }
+  }
+  lst
+}
+```
+
+This has implications if you want to access transformed data, so it is important to consider when designing schemas (see below).
+
+#### Referencing transformed elements
+
+fluffy validation can access transformed data elements on the fly, so any rules that use `.data` to access other data nodes will be accessing the data state at that point of the schema walk, rather than the original state of the data. See the following example:
+
+```{r transformed elements example}
+s <- Schema(
+  list(
+    list(
+      apply = "function(x, .data, ...) if (.data[[2]] == 1) x + 1"
+    ),
+    list(
+      apply = "function(x, .data, ...) if (.data[[2]] == 0) x + 1"
+    ),
+    list(
+      apply = "function(x, .data, ...) if (.data[[2]] == 1) x + 2"
+    ),
+    list(
+      apply = "function(x, .data, ...) if (.data[[3]] == 2) x + 3"
+    )
+  )
+)
+
+Validator(c(0, 0, 0, 0), s)@data
+```
+
+The first element remains `0` as `.data[[2]]` had not been transformed yet, whilst the third and fourth elements both change as the `.data` elements they referenced had been transformed by the time of their evaluation.
+
+#### Errors
+
+`Validator` objects also store an `@errors` property that highlights data validation errors. Like with `Schema`, this property also mirrors the structure of the input schema list with `NULL` elements where the schema is valid and error messages where the schema is invalid. 
+
+```{r validator errors example}
+Validator(
+  data = list(a = 1, b = 2),
+  schema = list(
+    type = "double",
+    a = list(type = "character"),
+    list(type = "array")
+  )
+)@errors
+```
+
+However, when `@error` is set to `TRUE` in the `Validator`, instead of the schema paths being shown, instead they are converted to the matched data positions. See the following example:
+
+```{r validator error message example, error=TRUE}
+Validator(
+  data = list(a = 1, b = 2),
+  schema = list(
+    type = "double",
+    a = list(type = "character"),
+    list(type = "array")
+  ),
+  error = TRUE
+)
+```
+
+Hence, the message about 'array' shows for element `[[2]]` as that was the data element it was matched to, as rule elements in the node are removed before positional matching.
+
+`Validator` short-circuits if the input `Schema` is invalid:
+
+```{r validator invalid schema example, error=TRUE}
+v <- Validator(1L, list(type = "not a type"))
+v@errors
+v@Schema@errors
+
+Validator(1L, list(type = "not a type"), error = TRUE)
+```
+
+#### Validating data from different sources
+
+Putting it all together, you can flexibly validate data in R from a myriad of different sources.
+
+YAML -> list -> fluffy.
+
+```{r yaml validation example, error=TRUE}
+yaml_schema <- yaml::yaml.load(
+  "
+  type: 'list'
+  a:
+    type: 'character'
+  b:
+    type: 'list'
+    a:
+      type: 'numeric'
+    b:
+      type: 'character'
+      min_nchar: 3
+  "
+)
+
+yaml_data <- yaml::yaml.load(
+  "
+  a: 1
+  b:
+    a: 1
+    b: 'Hi'
+  "
+)
+
+Validator(yaml_data, yaml_schema, error = TRUE)
+```
+
+JSON -> list -> fluffy.
+
+```{r json validation example, error=TRUE}
+json_schema <- jsonlite::fromJSON(
+  '{
+    "type": "list",
+    "a": {
+      "type": "numeric",
+      "min_length": 2
+    },
+    "b": {
+      "type": "list",
+      "a": {
+        "type": "numeric",
+        "max_val": 5
+      },
+      "b": {
+        "type": "character"
+      }
+    }
+  }'
+)
+
+json_data <- jsonlite::fromJSON(
+  '{
+    "a": 1,
+    "b": {
+      "a": 10,
+      "b": "Hi"
+    }
+  }'
+)
+
+Validator(json_data, json_schema, error = TRUE)
+```
+
+SPSS, SAV, Excel, etc. -> data.frame -> fluffy. 
+
+```{r rect validation example, error=TRUE}
+# rectangular data, from `readr` readme
+# works for any data.frame data, e.g., sav, dta, xls, xlsx, csv, tsv, etc.
+rect_schema <- list(
+  type = "data.frame",
+  chicken = list(type = "character", nzchar = TRUE),
+  sex = list(coerce = "factor", levels = c("rooster", "hen")),
+  eggs_laid = list(type = "integer", positive = TRUE),
+  motto = list(type = "character", nzchar = TRUE)
+)
+
+rect_data <- readr::read_csv(
+  readr::readr_example("chickens.csv"),
+  show_col_types = FALSE
+)
+
+Validator(rect_data, rect_schema, error = TRUE)
+```
+
+fluffy can validate numerous kinds of non-empty R objects, with data elements able to be validated if they can accessed with `[[`, for example:
+
+```{r any R object example, error=TRUE}
+Validator(
+  call("mean", 1:10),
+  list(
+    type = "call",
+    list(predicate = "function(x) identical(x, 1:10)")
+  )
+)@valid
+Validator(expression(x + 1), list(type = "expression"))@valid
+Validator(table(x = 1), list(type = "table"))@valid
+Validator(new.env(), list(type = "environment"))@valid
+e <- new.env()
+e$a <- 1L
+e$b <- "Hi"
+Validator(
+  e,
+  list(
+    type = "environment",
+    a = list(type = "integer"),
+    b = list(type = "character")
+  )
+)@valid
+```

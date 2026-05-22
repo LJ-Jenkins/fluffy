@@ -1,0 +1,107 @@
+---
+title: "Builtin Validation Rules"
+output: rmarkdown::html_vignette
+description: >
+  The builtin fluffy rules and their associated Schema and Validator behaviour. 
+vignette: >
+  %\VignetteIndexEntry{Builtin Validation Rules}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(fluffy)
+```
+
+fluffy has 30 validation rules and 10 cross rules.
+
+### Validation rules
+
+```{r builtin rules}
+Registry()@rule_names
+```
+
+The builtin rules are categorised by their type: 'control', 'transform', 'validate' and 'finalize'. When the `Validator` is run, rules are applied in four passes according to these categories, with the 'finalize' pass being unique in that rules in this group only operate if all rules in the schema node passed validation without error.
+
+Rules within each category are applied in the order they appear in their respective `Registry` property.
+
+```{r rule categories}
+r <- Registry()
+r@control_rules
+r@transform_rules
+r@validate_rules
+r@finalize_rules
+```
+
+Each validation rule has two functions associated with it: 
+
+* A function that validates the given schema value.
+
+```{r schema rule function example, error=TRUE}
+Schema(list(type = 1L), error = TRUE)
+```
+
+* A function that uses the schema value to validate data.
+
+```{r validation rule function example, error=TRUE}
+Validator(
+  data = 1L,
+  schema = list(type = "character"),
+  error = TRUE
+)
+```
+
+### Cross rules
+
+Cross rules operate within the `Schema`, checking that the values of two or more schema rules don't clash. They are not exhaustive, but apply to a number of common scenarios.
+
+```{r cross rule example, error=TRUE}
+Schema(
+  list(
+    min_length = 5,
+    max_length = 1
+  ),
+  error = TRUE
+)
+```
+
+### Rule information
+
+#### Validation rules
+
+```{r, validation rules table, echo=FALSE, results='asis'}
+x <- show_builtins("validation")
+header <- stats::setNames(rep(1, length(x)), colnames(x))
+new_colnames <- as.character(x[1, ])
+base_table <- stats::setNames(x[-1, ], new_colnames)
+
+kableExtra::add_header_above(
+  knitr::kable(base_table, "html", row.names = FALSE),
+  header
+)
+```
+
+#### Cross rules
+
+```{r, cross rules table, echo=FALSE, results='asis'}
+x <- show_builtins("cross")
+header <- stats::setNames(rep(1, length(x)), colnames(x))
+new_colnames <- as.character(x[1, ])
+base_table <- stats::setNames(x[-1, ], new_colnames)
+
+kableExtra::add_header_above(
+  knitr::kable(base_table, "html", row.names = FALSE),
+  header
+)
+```
+
+##### Note
+
+To quickly see the builtin rules at the terminal, use `show_builtins()`.
