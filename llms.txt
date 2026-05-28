@@ -402,19 +402,19 @@ For detailed information on using fluffy, see the vignettes:
 - [Creating Schemas and Validating
   Data](https://lj-jenkins.github.io/fluffy/articles/validating-data.html)
 
-(In development)
-
 - [Adding custom
   rules](https://lj-jenkins.github.io/fluffy/articles/custom-rules.html)
 
-## Note
+## Notes
 
 fluffy was inspired by and modelled on Python’s
-[Cerberus](https://docs.python-cerberus.org/) (hence the name!). Error
-printing in fluffy was modelled on [lobstr](https://lobstr.r-lib.org/)‘s
-tree function. fluffy was originally called ’RV’ but was renamed to
-distinguish itself from the [rv package manager for
-R](https://github.com/A2-ai/rv).
+[Cerberus](https://docs.python-cerberus.org/) (hence the name!).
+
+Error printing in fluffy was modelled on
+[lobstr](https://lobstr.r-lib.org/)’s tree function.
+
+fluffy was originally called ‘RV’ but was renamed to distinguish itself
+from the [rv package manager](https://github.com/A2-ai/rv).
 
 ## Getting help
 
@@ -434,24 +434,29 @@ contributing to this project, you agree to abide by its terms.
 
 - [`Registry()`](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
   [`is.Registry()`](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
-  : Create a Registry Object
+  : Registry
 - [`Schema()`](https://lj-jenkins.github.io/fluffy/reference/Schema.md)
   [`is.Schema()`](https://lj-jenkins.github.io/fluffy/reference/Schema.md)
-  : Create a Schema Object
+  : Schema
 - [`Validator()`](https://lj-jenkins.github.io/fluffy/reference/Validator.md)
   [`is.Validator()`](https://lj-jenkins.github.io/fluffy/reference/Validator.md)
-  : Create a Validator Object
+  : Validator
 - [`add_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_cross_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_type_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_coerce_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   : Add Rules to a Registry
 - [`show_builtins()`](https://lj-jenkins.github.io/fluffy/reference/show_builtins.md)
-  : Show fluffy Builtin Rules
+  : Show Builtin Rules
 
 # Articles
 
 ### All vignettes
+
+- [Adding Custom
+  Rules](https://lj-jenkins.github.io/fluffy/articles/custom-rules.md):
+
+  Add custom validation rules to validate schemas and data.
 
 - [Creating Schemas and Validating
   Data](https://lj-jenkins.github.io/fluffy/articles/validating-data.md):

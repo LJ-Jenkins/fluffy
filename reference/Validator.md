@@ -1,10 +1,7 @@
-# Create a Validator Object
+# Validator
 
-An S7 class that validates R objects against a
-[Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md). The
-`Validator` takes a `schema` (an object of class `Schema` or a `list`
-that can be converted to a `Schema`) and validates input `data` against
-the rules defined in the `schema`.
+Create a `Validator` object that validates/transforms R objects using a
+[Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md).
 
 ## Usage
 
@@ -18,8 +15,8 @@ is.Validator(x)
 
 - data:
 
-  Any R object. If using a nested schema, the object must have the `[[`
-  method implemented.
+  An R object. If using a nested schema, the object must have a `[[`
+  method.
 
 - schema:
 
@@ -30,62 +27,34 @@ is.Validator(x)
 
 - error:
 
-  single logical value. If `TRUE`, an error is thrown when the
+  Single logical value. If `TRUE`, the constructor throws an error when
   validation fails.
 
 - x:
 
-  object to be tested.
+  Object to be tested.
 
 ## Value
 
-An S7 `Validator` object with the following properties:
-
-- `data`:
-
-  The validated input data, with any changes that were made during
-  validation.
-
-- `Schema`:
-
-  An object of class
-  [Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md).
-  This also contains the
-  [Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
-  used for validation, which can be accessed via `@Schema@Registry`.
-
-- `errors`:
-
-  (Read only) A list mirroring the data or schema structure (depending
-  on `match_schema` and `match_data`), with `NULL` for valid fields and
-  character error messages for invalid ones. Extra fields showing
-  missigness may be present when both `match_schema` and `match_data`
-  are `TRUE`.
-
-- `.validator_cache`:
-
-  (Internal, read only) An environment for caching validation results.
-
-- `error`:
-
-  Boolean; whether to error upon failure (invalid data or schema).
-
-- `valid`:
-
-  (Read only) Boolean; `TRUE` if schema is valid and all data validation
-  rules pass, `FALSE` otherwise (invalid data or schema).
+A `Validator` S7 object.
 
 ## Details
 
-The validation process checks each field in the `schema` against the
-data, creating an errors list that mirrors the schema structure with
-`NULL` for valid fields and character error messages for invalid fields.
+The `Validator` class validates/transforms data using a `Schema`. The
+process checks each field in the schema against the data, applying the
+rules specified. Any data element not present in the schema is ignored.
+Validation is done in four passes, according to rule categories in the
+[Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md):
+`control`, `transform`, `validate`, and `finalize`.
 
-These validation results are stored in the `@errors` property, and the
-overall validity is indicated by the `@valid` property. If the `@error`
+Validation results are stored in the `@errors` property, and the overall
+validity is indicated by the `@valid` property. If the `@error`
 property/argument is set to `TRUE`, any validation failure will result
 in an error being thrown. To customise the truncation of error messages,
-see the `@Schema@error_print_opts` property.
+see the
+[Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md)
+`@error_print_opts` property. The (possibly) transformed data is stored
+in the `@data` property.
 
 The `Validator` is re-evaluated upon any change to the object
 properties. If an invalid schema is provided, the validation will fail
@@ -93,19 +62,53 @@ immediately with the validation error indicating that the schema is
 invalid. To see the errors in the schema validation, see the
 `Validator@Schema@errors` property.
 
-See the
-[Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md) class
-for details on the schema class structure, and the
-[Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
-class for details on the available validation rules.
-
-For full details see the [validating data
-vignette](https://lj-jenkins.github.io/fluffy/doc/validating-data.md).
+For full details see the vignettes on [builtin
+rules](https://lj-jenkins.github.io/fluffy/doc/validation-rules.md),
+[data
+validation](https://lj-jenkins.github.io/fluffy/doc/validating-data.md),
+and [adding custom
+rules](https://lj-jenkins.github.io/fluffy/doc/custom-rules.md).
 
 ## See also
 
+[Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md) and
+[Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
+classes, and
 [add_rule](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
-for adding rules to a registry.
+for adding custom rules.
+
+## Additional properties
+
+- `@data`:
+
+  The validated input data, with any changes that were made during
+  validation.
+
+- `@Schema`:
+
+  An object of class
+  [Schema](https://lj-jenkins.github.io/fluffy/reference/Schema.md)
+  containing the schema used for validation, as well as the
+  [Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md).
+
+- `@errors`:
+
+  (Read-only) A list mirroring the schema structure, with `NULL` for
+  rules that pass and character error messages for rules that fail.
+
+- `@.validator_cache`:
+
+  (Read-only) An environment for caching validation results. Used to
+  avoid redundant validation.
+
+- `@error`:
+
+  Boolean; whether to error upon failure (invalid data or schema).
+
+- `@valid`:
+
+  (Read-only) Boolean; `TRUE` if the schema is valid and all data
+  validation rules pass, `FALSE`otherwise.
 
 ## Examples
 
@@ -151,4 +154,9 @@ try(Validator(list(42), list(type = 123), error = TRUE))
 #> Error : <fluffy::Validator> object is invalid:
 #> - Schema validation failed with the following errors:
 #> └─ type: Must be a function or a string.
+
+# Transforms data according to rules
+v <- Validator(1, list(coerce = "character"))
+v@data # "1"
+#> [1] "1"
 ```

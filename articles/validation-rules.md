@@ -5,7 +5,7 @@
 library(fluffy)
 ```
 
-fluffy has 30 validation rules and 10 cross rules.
+fluffy has 31 validation rules and 10 cross rules.
 
 ### Validation rules
 

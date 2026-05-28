@@ -1,6 +1,6 @@
-# Show fluffy Builtin Rules
+# Show Builtin Rules
 
-Helper to show the builtin rules in a Registry, and their behaviour.
+Helper to show the builtin rules in a `Registry`, and their behaviour.
 
 ## Usage
 

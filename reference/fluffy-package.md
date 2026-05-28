@@ -15,3 +15,8 @@ Useful links:
 
 **Maintainer**: Luke Jenkins <luke-jenkins-dev@outlook.com>
 ([ORCID](https://orcid.org/0000-0002-7206-7242)) \[copyright holder\]
+
+Authors:
+
+- Luke Jenkins <luke-jenkins-dev@outlook.com>
+  ([ORCID](https://orcid.org/0000-0002-7206-7242)) \[copyright holder\]

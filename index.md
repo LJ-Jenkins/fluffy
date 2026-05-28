@@ -402,19 +402,19 @@ For detailed information on using fluffy, see the vignettes:
 - [Creating Schemas and Validating
   Data](https://lj-jenkins.github.io/fluffy/articles/validating-data.html)
 
-(In development)
-
 - [Adding custom
   rules](https://lj-jenkins.github.io/fluffy/articles/custom-rules.html)
 
-## Note
+## Notes
 
 fluffy was inspired by and modelled on Python’s
-[Cerberus](https://docs.python-cerberus.org/) (hence the name!). Error
-printing in fluffy was modelled on [lobstr](https://lobstr.r-lib.org/)‘s
-tree function. fluffy was originally called ’RV’ but was renamed to
-distinguish itself from the [rv package manager for
-R](https://github.com/A2-ai/rv).
+[Cerberus](https://docs.python-cerberus.org/) (hence the name!).
+
+Error printing in fluffy was modelled on
+[lobstr](https://lobstr.r-lib.org/)’s tree function.
+
+fluffy was originally called ‘RV’ but was renamed to distinguish itself
+from the [rv package manager](https://github.com/A2-ai/rv).
 
 ## Getting help
 

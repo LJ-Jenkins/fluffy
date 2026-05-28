@@ -4,17 +4,17 @@
 
 - [`Registry()`](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
   [`is.Registry()`](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
-  : Create a Registry Object
+  : Registry
 - [`Schema()`](https://lj-jenkins.github.io/fluffy/reference/Schema.md)
   [`is.Schema()`](https://lj-jenkins.github.io/fluffy/reference/Schema.md)
-  : Create a Schema Object
+  : Schema
 - [`Validator()`](https://lj-jenkins.github.io/fluffy/reference/Validator.md)
   [`is.Validator()`](https://lj-jenkins.github.io/fluffy/reference/Validator.md)
-  : Create a Validator Object
+  : Validator
 - [`add_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_cross_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_type_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   [`add_coerce_rule()`](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)
   : Add Rules to a Registry
 - [`show_builtins()`](https://lj-jenkins.github.io/fluffy/reference/show_builtins.md)
-  : Show fluffy Builtin Rules
+  : Show Builtin Rules

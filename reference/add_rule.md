@@ -14,7 +14,7 @@ add_rule(
   name,
   validator_fn,
   schema_fn = NULL,
-  rule_type = c("validate", "control", "transform")
+  rule_type = c("validate", "control", "transform", "finalize")
 )
 
 add_cross_rule(obj, name, rule_names, cross_fn)
@@ -28,16 +28,16 @@ add_coerce_rule(obj, coerce_name, coerce_fn)
 
 - obj:
 
-  Registry, Schema, or Validator object.
+  `Registry`, `Schema`, or `Validator` object.
 
 - name:
 
-  string specifying the name of the rule to add. Rule names cannot be
+  String specifying the name of the rule to add. Rule names cannot be
   the same as any existing rule names.
 
 - validator_fn:
 
-  function that validates a data field against a schema field. Every
+  Function that validates a data field against a schema field. Every
   validator rule function must return `NULL` or a named list. A `NULL`
   return indicates validation success with no transformed data or
   alteration to the control flow. A named list return can accept the
@@ -55,39 +55,40 @@ add_coerce_rule(obj, coerce_name, coerce_fn)
 
 - schema_fn:
 
-  function to validate a schema field definition. If `NULL`, a default
-  function that performs no validation is used. Schema validation
+  Function to validate a schema field definition. If `NULL`, a default
+  function that performs no validation is used. `Schema` validation
   functions should return `NULL` if the schema field is valid, and a
   string error message if invalid.
 
 - rule_type:
 
-  string specifying the type of rule to add. Must be one of `"control"`,
-  `"transform"`, or `"validate"`.
+  String specifying the type of rule to add. Must be one of `"control"`,
+  `"transform"`, `"validate"`, `"finalize"`.
 
 - rule_names:
 
-  character vector specifying the names of the existing schema rules
+  Character vector specifying the names of the existing schema rules
   that the cross rule will operate over. Must be of length 2 or more,
-  and all names must be of existing schema rules in the Registry.
+  and all names must be of existing schema rules in the `Registry`.
 
 - cross_fn:
 
-  function to validate schema field definitions across multiple schema
-  rules. Schema cross functions should return `NULL` if the schema
+  Function to validate schema field definitions across multiple schema
+  rules. `Schema` cross functions should return `NULL` if the schema
   fields are valid, and a string error message if invalid.
 
 - type_name, coerce_name:
 
-  string specifying the name of the type/coerce rule value to add.
+  String specifying the name of the type/coerce rule value to add.
 
 - type_fn, coerce_fn:
 
-  function to validate/coerce a field value.
+  Function to validate/coerce a field value.
 
 ## Value
 
-Invisibly returns the input object with the new rule added.
+Invisibly returns the input object with the new rule added to the
+associated `Registry`.
 
 ## Details
 
@@ -107,9 +108,9 @@ schema/cross rule functions:
 
 - `function(field, ...)`
 
-- `function(field, .self, ...)` \| `function(field, .data, ...)`
+- `function(field, .self, ...)` \| `function(field, .schema, ...)`
 
-- `function(field, .self, .data)`
+- `function(field, .self, .schema)`
 
 validator rule functions:
 
@@ -124,6 +125,15 @@ As [Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
 uses environments to store rules, which are mutable, add_rule methods
 copy the existing environment and the new rule into a new environment,
 meaning that the original object is not modified. See examples.
+
+For full details see the vignettes on [adding custom
+rules](https://lj-jenkins.github.io/fluffy/doc/custom-rules.md).
+
+For more information on validating data with a `Schema`, see the
+vignettes on [builtin
+rules](https://lj-jenkins.github.io/fluffy/doc/validation-rules.md) and
+[data
+validation](https://lj-jenkins.github.io/fluffy/doc/validating-data.md).
 
 ## See also
 
