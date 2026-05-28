@@ -12,7 +12,7 @@ add_rule(
   name,
   validator_fn,
   schema_fn = NULL,
-  rule_type = c("validate", "control", "transform")
+  rule_type = c("validate", "control", "transform", "finalize")
 )
 
 add_cross_rule(obj, name, rule_names, cross_fn)
@@ -22,12 +22,12 @@ add_type_rule(obj, type_name, type_fn)
 add_coerce_rule(obj, coerce_name, coerce_fn)
 }
 \arguments{
-\item{obj}{Registry, Schema, or Validator object.}
+\item{obj}{\code{Registry}, \code{Schema}, or \code{Validator} object.}
 
-\item{name}{string specifying the name of the rule to add.
+\item{name}{String specifying the name of the rule to add.
 Rule names cannot be the same as any existing rule names.}
 
-\item{validator_fn}{function that validates a data field against a schema field.
+\item{validator_fn}{Function that validates a data field against a schema field.
 Every validator rule function must return \code{NULL} or a named list. A
 \code{NULL} return indicates validation success with no transformed data or
 alteration to the control flow. A named list return can accept the
@@ -42,29 +42,30 @@ validation is assumed to have succeeded.
 rules. If not returned, assumed to be \code{TRUE}.
 }}
 
-\item{schema_fn}{function to validate a schema field definition. If \code{NULL}, a
-default function that performs no validation is used. Schema
+\item{schema_fn}{Function to validate a schema field definition. If \code{NULL}, a
+default function that performs no validation is used. \code{Schema}
 validation functions should return \code{NULL} if the schema field is
 valid, and a string error message if invalid.}
 
-\item{rule_type}{string specifying the type of rule to add. Must be one of
-\code{"control"}, \code{"transform"}, or \code{"validate"}.}
+\item{rule_type}{String specifying the type of rule to add. Must be one of
+\code{"control"}, \code{"transform"}, \code{"validate"}, \code{"finalize"}.}
 
-\item{rule_names}{character vector specifying the names of the existing schema
+\item{rule_names}{Character vector specifying the names of the existing schema
 rules that the cross rule will operate over. Must be of
 length 2 or more, and all names must be of existing schema rules
-in the Registry.}
+in the \code{Registry}.}
 
-\item{cross_fn}{function to validate schema field definitions across multiple
-schema rules. Schema cross functions should return \code{NULL} if the
+\item{cross_fn}{Function to validate schema field definitions across multiple
+schema rules. \code{Schema} cross functions should return \code{NULL} if the
 schema fields are valid, and a string error message if invalid.}
 
-\item{type_name, coerce_name}{string specifying the name of the type/coerce rule value to add.}
+\item{type_name, coerce_name}{String specifying the name of the type/coerce rule value to add.}
 
-\item{type_fn, coerce_fn}{function to validate/coerce a field value.}
+\item{type_fn, coerce_fn}{Function to validate/coerce a field value.}
 }
 \value{
-Invisibly returns the input object with the new rule added.
+Invisibly returns the input object with the new rule added to the
+associated \code{Registry}.
 }
 \description{
 Add validator, schema, (schema) cross, type, or coerce rules to a
@@ -90,8 +91,8 @@ schema/cross rule functions:
 \itemize{
 \item \verb{function(field, ...)}
 \item \verb{function(field, .self, ...)} |
-\verb{function(field, .data, ...)}
-\item \verb{function(field, .self, .data)}
+\verb{function(field, .schema, ...)}
+\item \verb{function(field, .self, .schema)}
 }
 
 validator rule functions:
@@ -106,6 +107,14 @@ As \link{Registry} uses environments to store rules, which are
 mutable, \link{add_rule} methods copy the existing environment
 and the new rule into a new environment, meaning that the
 original object is not modified. See examples.
+
+For full details see the vignettes on
+\href{../doc/custom-rules.html}{adding custom rules}.
+
+For more information on validating data with a \code{Schema}, see the
+vignettes on
+\href{../doc/validation-rules.html}{builtin rules} and
+\href{../doc/validating-data.html}{data validation}.
 }
 \examples{
 mySchema <- Schema(list(check_my_attr = 1L))

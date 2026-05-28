@@ -3,72 +3,53 @@
 \name{Validator}
 \alias{Validator}
 \alias{is.Validator}
-\title{Create a Validator Object}
+\title{Validator}
 \usage{
 Validator(data, schema, error = FALSE)
 
 is.Validator(x)
 }
 \arguments{
-\item{data}{Any R object. If using a nested schema, the object must have the \code{[[} method
-implemented.}
+\item{data}{An R object. If using a nested schema, the object must have a \code{[[} method.}
 
 \item{schema}{\link{Schema} object or a non-empty \code{list} defining the schema.
 See the \link{Schema} constructor for details on the schema structure and rules.}
 
-\item{error}{single logical value. If \code{TRUE}, an error is thrown when the validation
-fails.}
+\item{error}{Single logical value. If \code{TRUE}, the constructor throws
+an error when validation fails.}
 
-\item{x}{object to be tested.}
+\item{x}{Object to be tested.}
 }
 \value{
-An S7 \code{Validator} object with the following properties:
-\describe{
-\item{\code{data}}{The validated input data, with any changes that were
-made during validation.}
-\item{\code{Schema}}{An object of class \link{Schema}. This also contains the
-\link{Registry} used for validation, which can be accessed via
-\verb{@Schema@Registry}.}
-\item{\code{errors}}{(Read only) A list mirroring the data or schema structure
-(depending on \code{match_schema} and \code{match_data}), with \code{NULL} for valid
-fields and character error messages for invalid ones. Extra fields
-showing missigness may be present when both \code{match_schema} and
-\code{match_data} are \code{TRUE}.}
-\item{\code{.validator_cache}}{(Internal, read only) An environment for caching
-validation results.}
-\item{\code{error}}{Boolean; whether to error upon failure
-(invalid data or schema).}
-\item{\code{valid}}{(Read only) Boolean; \code{TRUE} if schema is valid and all
-data validation rules pass, \code{FALSE} otherwise (invalid data or schema).}
-}
+A \code{Validator} S7 object.
 }
 \description{
-An S7 class that validates R objects against a \link{Schema}.
-The \code{Validator} takes a \code{schema} (an object of class \code{Schema} or a \code{list}
-that can be converted to a \code{Schema}) and validates input \code{data} against
-the rules defined in the \code{schema}.
+Create a \code{Validator} object that validates/transforms R objects
+using a \link{Schema}.
 }
 \details{
-The validation process checks each field in the \code{schema} against the data,
-creating an errors list that mirrors the schema structure with \code{NULL} for
-valid fields and character error messages for invalid fields.
+The \code{Validator} class validates/transforms data using a \code{Schema}. The
+process checks each field in the schema against the data, applying the
+rules specified. Any data element not present in the schema is ignored.
+Validation is done in four passes, according to rule categories in
+the \link{Registry}: \code{control}, \code{transform}, \code{validate}, and \code{finalize}.
 
-These validation results are stored in the \verb{@errors} property, and
+Validation results are stored in the \verb{@errors} property, and
 the overall validity is indicated by the \verb{@valid} property. If the
 \verb{@error} property/argument is set to \code{TRUE}, any validation failure will
 result in an error being thrown. To customise the truncation of error
-messages, see the \verb{@Schema@error_print_opts} property.
+messages, see the \link{Schema} \verb{@error_print_opts} property. The (possibly)
+transformed data is stored in the \verb{@data} property.
 
 The \code{Validator} is re-evaluated upon any change to the object properties.
 If an invalid schema is provided, the validation will fail immediately with
 the validation error indicating that the schema is invalid. To see the
 errors in the schema validation, see the \code{Validator@Schema@errors} property.
 
-See the \link{Schema} class for details on the schema class structure, and the
-\link{Registry} class for details on the available validation rules.
-
-For full details see the
-\href{../doc/validating-data.html}{validating data vignette}.
+For full details see the vignettes on
+\href{../doc/validation-rules.html}{builtin rules},
+\href{../doc/validating-data.html}{data validation}, and
+\href{../doc/custom-rules.html}{adding custom rules}.
 }
 \examples{
 v <- Validator(
@@ -91,7 +72,35 @@ try(Validator(list("Hello", 42), s, error = TRUE))
 
 # Invalid schemas show their errors
 try(Validator(list(42), list(type = 123), error = TRUE))
+
+# Transforms data according to rules
+v <- Validator(1, list(coerce = "character"))
+v@data # "1"
 }
 \seealso{
-\link{add_rule} for adding rules to a registry.
+\link{Schema} and \link{Registry} classes, and \link{add_rule} for adding custom
+rules.
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@data}}{The validated input data, with any changes that were made during validation.}
+
+\item{\code{@Schema}}{An object of class \link{Schema} containing the schema used for validation, as
+well as the \link{Registry}.}
+
+\item{\code{@errors}}{(Read-only)
+A list mirroring the schema structure, with \code{NULL} for rules that pass and
+character error messages for rules that fail.}
+
+\item{\code{@.validator_cache}}{(Read-only)
+An environment for caching validation results. Used to avoid redundant
+validation.}
+
+\item{\code{@error}}{Boolean; whether to error upon failure (invalid data or schema).}
+
+\item{\code{@valid}}{(Read-only)
+Boolean; \code{TRUE} if the schema is valid and all data validation rules pass,
+\code{FALSE}otherwise.}
+}}
+

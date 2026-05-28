@@ -686,9 +686,9 @@
 #-- helper
 
 #' @title
-#' Show fluffy Builtin Rules
+#' Show Builtin Rules
 #' @description
-#' Helper to show the builtin rules in a Registry, and their behaviour.
+#' Helper to show the builtin rules in a `Registry`, and their behaviour.
 #' @param rules
 #' Which builtin rules to show. `"validation"` for the
 #' standard schema/data validation rules, `"cross"` for the cross rules that

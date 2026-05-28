@@ -20,5 +20,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Luke Jenkins \email{luke-jenkins-dev@outlook.com} (\href{https://orcid.org/0000-0002-7206-7242}{ORCID}) [copyright holder]
 
+Authors:
+\itemize{
+  \item Luke Jenkins \email{luke-jenkins-dev@outlook.com} (\href{https://orcid.org/0000-0002-7206-7242}{ORCID}) [copyright holder]
+}
+
 }
 \keyword{internal}

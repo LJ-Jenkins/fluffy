@@ -42,15 +42,15 @@ print.fluffy_rule_info <- function(x, width = getOption("width") + 20L, ...) {
     mapply(
       function(val, w) {
         if (wchar(val) <= w) {
-          return(val)
+          val
+        } else if (w <= 4) {
+          substr(val, 1, w)
+        } else {
+          paste0(
+            substr(val, 1, w - 4),
+            " ..."
+          )
         }
-        if (w <= 4) {
-          return(substr(val, 1, w))
-        }
-        paste0(
-          substr(val, 1, w - 4),
-          " ..."
-        )
       },
       strs, widths,
       USE.NAMES = FALSE

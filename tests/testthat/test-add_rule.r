@@ -30,6 +30,12 @@ test_that(
     )
     expect_true("new_rule" %in% v@Schema@Registry@transform_rules)
     expect_true("new_rule" %in% v@Schema@Registry@rule_names)
+
+    expect_no_error(r <- add_rule(r, "new_frule", fn, rule_type = "finalize"))
+    expect_equal(r@validator_rules$new_rule, fn)
+    expect_equal(r@schema_rules$new_rule, sfn, ignore_function_env = TRUE)
+    expect_true("new_frule" %in% r@finalize_rules)
+    expect_true("new_frule" %in% r@rule_names)
   }
 )
 

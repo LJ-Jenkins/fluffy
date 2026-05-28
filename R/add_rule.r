@@ -143,7 +143,7 @@ S7::method(add_rule, Registry) <- function(
   name,
   validator_fn,
   schema_fn = NULL,
-  rule_type = c("validate", "control", "transform")
+  rule_type = c("validate", "control", "transform", "finalize")
 ) {
   rule_type <- match.arg(rule_type)
   .add_rule(obj, name, validator_fn, schema_fn, rule_type)
@@ -154,7 +154,7 @@ S7::method(add_rule, Schema) <- function(
   name,
   validator_fn,
   schema_fn = NULL,
-  rule_type = c("validate", "control", "transform")
+  rule_type = c("validate", "control", "transform", "finalize")
 ) {
   rule_type <- match.arg(rule_type)
   S7::prop(obj, "Registry", check = TRUE) <- .add_rule(
@@ -177,7 +177,7 @@ S7::method(add_rule, Validator) <- function(
   name,
   validator_fn,
   schema_fn = NULL,
-  rule_type = c("validate", "control", "transform")
+  rule_type = c("validate", "control", "transform", "finalize")
 ) {
   rule_type <- match.arg(rule_type)
   nested_prop(obj, "Schema", "Registry", check = TRUE) <- .add_rule(

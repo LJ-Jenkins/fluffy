@@ -1,71 +1,87 @@
 #' @title
-#' Create a Registry Object
+#' Registry
 #' @description
-#' An S7 class that defines rules for validating data against a [Schema].
+#' Create a `Registry` object that defines and stores rules for validating
+#' data against a [Schema].
 #' @param x
-#' object to be tested.
+#' Object to be tested.
+#' @prop rule_names (Read-only)
+#' All rules, in order of evaluation.
+#' Derived from the combination of the
+#' `control`, `transform`, `validate`, and `finalize` rules.
+#' @prop control_rules
+#' Rules that influence the control flow.
+#' These will be applied in the first pass when validating data.
+#' @prop transform_rules
+#' Rules that transform data. These will be applied
+#' in the second pass when validating data.
+#' @prop validate_rules
+#' Rules that validate data. These will be applied
+#' in the penultimate pass when validating.
+#' @prop finalize_rules
+#' Rules that finalize validation. These will be
+#' applied in the last pass when validating, after all other rules have been
+#' applied. These rules will only apply if no previous rules for that schema
+#' node have failed.
+#' @prop str_to_fn_rules
+#' Schema rules that are allowed to have string or
+#' function values, with string values being converted to functions
+#' automatically during schema validation.
+#' @prop str_to_fn_converter
+#' Function that converts string values to functions for the
+#' `@str_to_fn_rules`.
+#' @prop type_names (Read-only)
+#' Allowed type names. Derived from the keys of the
+#' `@type_map`.
+#' @prop type_map
+#' Environment mapping type names to type definition functions. Can only
+#' be added to via [add_type_rule()].
+#' @prop coerce_names (Read-only)
+#' Allowed coercion names. Derived from the keys of the
+#' `@coerce_map`.
+#' @prop coerce_map
+#' Environment mapping coercion names to coercion functions. Can only
+#' be added to via [add_coerce_rule()].
+#' @prop schema_rules
+#' Environment mapping schema rule names to schema validation functions. Can
+#' only be added to via [add_rule()].
+#' @prop cross_rule_names (Read-only)
+#' Schema cross rules. Derived from the keys
+#' of the `@cross_rules` environment.
+#' @prop cross_rules
+#' Environment containing the schema cross rule functions (rules that check
+#' relationships between multiple schema rule values). Can only be added to
+#' via [add_cross_rule()].
+#' @prop validator_rules
+#' Environment mapping validator rule names to validator functions. Can only
+#' be added to via [add_rule()].
 #' @returns
-#' An S7 `Registry` object with the following properties:
-#' \describe{
-#'   \item{`rule_names`}{All rule names, in order of evaluation.
-#'     Derived from `control`/`transform`/`validate` rules with
-#'     `apply_last` added to the end.}
-#'   \item{'control_rules}{Rules that influence the control flow.
-#'     These will be applied in the first pass when validating data.}
-#'   \item{'transform_rules'}{Rules that transform data.
-#'     These will be applied in the second pass when validating data.}
-#'   \item{'validate_rules'}{Rules that validate data.
-#'     These will be applied in the penultimate pass when validating.}
-#'   \item{'finalize_rules'}{Rules that finalize validation.
-#'     These will be applied in the last pass when validating, after all
-#'     other rules have been applied. These rules will only apply if no
-#'     previous rules for that node have failed.}
-#'   \item{`str_to_fn_rules`}{Schema rules that are allowed to have string
-#'     or function values, with string values being converted to functions
-#'     automatically during schema validation.}
-#'   \item{`str_to_fn_converter`}{A function that converts string values to
-#'     functions for the `str_to_fn_rules`.}
-#'   \item{`type_names`}{A character vector of allowed type names, derived
-#'     from the keys of the `type_map` environment.}
-#'   \item{`type_map`}{An environment mapping type names to type definition
-#'      functions.}
-#'   \item{`coerce_names`}{A character vector of allowed coercion rule names,
-#'     derived from the keys of the `coerce_map` environment.}
-#'   \item{`coerce_map`}{An environment mapping type names to coercion
-#'      functions.}
-#'   \item{`rule_names`}{A character vector of all (non-cross) rule names.}
-#'   \item{`schema_rules`}{An environment containing the schema rule
-#'     functions.}
-#'   \item{`cross_rule_names`}{A character vector of allowed schema cross
-#'    rule names, derived from the keys of the `cross_rules`
-#'    environment.}
-#'   \item{`cross_rules`}{An environment containing the schema cross
-#'     rule functions (rules that check relationships between multiple schema
-#'     rule values).}
-#'   \item{`validator_rules`}{An environment containing the validator rule
-#'     functions.}
-#' }
+#' A `Registry` S7 object.
 #' @details
-#' The `Registry` class serves as a central repository for all the rules used in
-#' schema and data validation for `fluffy` based workflows. It includes builtin
-#' rules for common validation tasks and allows for the addition of custom
-#' rules.
+#' The `Registry` class serves as a central repository for all the rules used
+#' in `fluffy` schema and data validation. It is passed to the [Schema] and
+#' [Validator] classes, which use the rules stored in the `Registry` to
+#' validate schemas and data, respectively.
 #'
-#' Registry objects are automatically created in `Schema` objects
-#' (which are passed to `Validator` objects), and rules can be added to the
-#' registry directly within those objects by using the rule-adding generic
-#' functions. It is therefore not necessary to create a `Registry` object
-#' separately if one does not wish.
+#' To see the available builtin rules,
+#' use the helper function [`show_builtins()`], which lists all the builtin
+#' rules in a `Registry`.
 #'
-#' However, `Schema` and `Validator` objects are automatically re-validated
-#' when rules are added, so for the addition of many new rules, it is
-#' beneficial to create a `Registry` object, add all the rules to it, and
-#' then pass it to the other classes.
+#' As `Registry` objects are automatically created in the `Schema` constructor,
+#' which is in turn called in the `Validator` constructor, a `Registry` does not
+#' need to be created separately to use `fluffy`'s validation functionality.
+#' Custom rules can also be added to the `Registry` within a `Schema` or
+#' `Validator`  object. However, rule addition will trigger re-validation of
+#' the given object, so for the addition of many new rules, it is beneficial
+#' to create a `Registry` object, add all the rules to it, and then pass it to
+#' the other classes.
 #'
-#' For full details see the helper function [`show_builtins()`] or the
-#' [rules vignette](../doc/validation-rules.html).
+#' For full details see the vignettes on
+#' [builtin rules](../doc/validation-rules.html),
+#' [data validation](../doc/validating-data.html), and
+#' [adding custom rules](../doc/custom-rules.html).
 #' @seealso [Schema] and [Validator] constructors. [add_rule] for adding
-#' rules to a registry.
+#' rules to a `Registry`.
 #' @examples
 #' r <- Registry()
 #' s <- Schema(list(type = "integer"), registry = r)
@@ -74,6 +90,7 @@
 #' @export
 Registry <- S7::new_class(
   "Registry",
+  package = "fluffy",
   properties = list(
     rule_names = S7::new_property(
       getter = function(self) {

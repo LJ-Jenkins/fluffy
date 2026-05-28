@@ -3,79 +3,61 @@
 \name{Schema}
 \alias{Schema}
 \alias{is.Schema}
-\title{Create a Schema Object}
+\title{Schema}
 \usage{
 Schema(schema, registry = Registry(), error = FALSE, ...)
 
 is.Schema(x)
 }
 \arguments{
-\item{schema}{non-empty list defining the schema. Each leaf element to be
+\item{schema}{Non-empty list defining the schema. Each leaf element to be
 validated must be named with rules that are registered in the schema rule
 registry (see \link{Registry} and \link{add_rule}). Named elements must be unique
 at a given level of the list.}
 
-\item{registry}{object of class \link{Registry} containing the schema and validator rules to
-use for schema validation. If not provided, the default registry with
-builtin rules will be used.}
+\item{registry}{Object of class \link{Registry} containing the schema and validator rules to
+use for schema validation.}
 
-\item{error}{single logical value. If \code{TRUE}, the constructor throws
+\item{error}{Single logical value. If \code{TRUE}, the constructor throws
 an error when the schema is invalid.}
 
-\item{...}{named arguments passed to internal error message formatting functions:
+\item{...}{Named arguments passed to internal error message formatting functions:
 \code{max_depth}, \code{max_width}, \code{max_rows}, and \code{UTF8} which control the
 truncation and printing of the error message when the schema
 validation fails. \code{max_} arguments accept integerish scalar values,
 and \code{UTF8} accepts a single logical value. Unnamed arguments or
-names other than the above will be ignored. Stored in the
-\code{error_print_opts} property.}
+names other than the above will be ignored.}
 
-\item{x}{object to be tested.}
+\item{x}{Object to be tested.}
 }
 \value{
-An S7 \code{Schema} object with the following properties:
-\describe{
-\item{\code{schema}}{The input schema list, with strings converted to
-functions where applicable.}
-\item{\code{errors}}{(Read only) A list mirroring the schema structure,
-with \code{NULL} for valid rules and character error messages for
-invalid ones.}
-\item{\code{Registry}}{An object of class \link{Registry} containing the
-schema and validator rules used for validation.}
-\item{\code{.schema_cache}}{(Internal, read only) An environment for caching
-schema validation results.}
-\item{\code{error}}{Boolean; whether to error on invalid schemas.}
-\item{\code{error_print_opts}}{A list of options for error message printing
-when \code{error = TRUE}. Options are \code{max_depth}, \code{max_width}, \code{max_rows},
-and \code{UTF8}, which control the truncation and printing of the error
-message when validation fails. These options are also used by the
-Validator class that ingests the Schema.}
-\item{\code{valid}}{(Read only) Boolean; \code{TRUE} if schema is valid, \code{FALSE}
-otherwise.}
-}
+A \code{Schema} S7 object.
 }
 \description{
-An S7 class that defines and validates a schema for the future
-validation of R objects against it, using a \link{Validator}.
+Create a \code{Schema} object that defines and validates a schema for the future
+validation of R objects using a \code{Validator}.
 }
 \details{
+The \code{Schema} class defines the structure and rules for validating data using
+a \code{Validator}. It ingests the input schema list and then reorders and
+validates the schema according to the \link{Registry}. The resulting \verb{@schema}
+property defines the validation behaviour and data matching.
+
 Each element of the input list represents a field with named rules
 (e.g., \code{'type'}, \code{'required'}, \code{'min_val'}) that are checked against the
 schema rule registry. Cross rules (e.g., \code{'min_val_larger_than_max_val'},
 where \code{'min_val'} < \code{'max_val'}) are also evaluated when all constituent
-rules pass individually.
+rules pass individually. See the \link{Registry} class for details.
 
 The schema is re-evaluated upon any change to the schema properties,
-with the \verb{@valid} property indicates whether the schema is valid
+with the \verb{@valid} property indicating whether the schema is valid
 (all rules pass) or invalid (any rule fails). If invalid, when passed
 to a \link{Validator} the validation will fail immediately.
 
-See the \link{Registry} class for details on the available rules and how to
-customise them. See the \link{Validator} class for details on how to use a
-\code{Schema} to validate data.
-
-For full details see the
-\href{../doc/validating-data.html}{validating data vignette}.
+For full details see the vignettes on
+\href{../doc/validation-rules.html}{builtin rules},
+\href{../doc/validating-data.html}{data validation}, and
+\href{../doc/custom-rules.html}{adding custom rules}.
 }
 \examples{
 # A valid schema
@@ -94,5 +76,39 @@ s@errors # error message
 try(Schema(list(name = list(type = 123)), error = TRUE))
 }
 \seealso{
-\link{add_rule} for adding rules to a registry.
+\link{add_rule} for adding rules to a \code{Registry}. \link{Validator} for
+validating data against a \code{Schema}.
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@schema}}{The input schema list, with nodes reordered to match the order of the
+rules in the registry, and any strings converted to functions where
+applicable.}
+
+\item{\code{@errors}}{(Read-only)
+A list mirroring the schema structure, with \code{NULL} for valid rules and
+character error messages for invalid rules.}
+
+\item{\code{@Registry}}{An object of class \link{Registry} containing the schema and validator rules
+used for validation.}
+
+\item{\code{@.schema_cache}}{(Read-only)
+An environment for caching schema validation results. Used to
+avoid redundant validation.}
+
+\item{\code{@error}}{Boolean; whether to error on invalid schemas.}
+
+\item{\code{@error_print_opts}}{A list of options for error message printing when \code{error = TRUE}. These
+options are also used by the \code{Validator} class that ingests the \code{Schema.}
+Defaults are \itemize{
+\item \code{max_depth = 10L}
+\item \code{max_width = getOption("width")}
+\item \code{max_rows = 30L}
+\item \code{UTF8 = l10n_info()[["UTF-8"]]}
+}}
+
+\item{\code{@valid}}{(Read-only)
+Boolean; \code{TRUE} if schema is valid, \code{FALSE} otherwise.}
+}}
+

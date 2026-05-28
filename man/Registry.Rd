@@ -3,79 +3,45 @@
 \name{Registry}
 \alias{Registry}
 \alias{is.Registry}
-\title{Create a Registry Object}
+\title{Registry}
 \usage{
 Registry()
 
 is.Registry(x)
 }
 \arguments{
-\item{x}{object to be tested.}
+\item{x}{Object to be tested.}
 }
 \value{
-An S7 \code{Registry} object with the following properties:
-\describe{
-\item{\code{rule_names}}{All rule names, in order of evaluation.
-Derived from \code{control}/\code{transform}/\code{validate} rules with
-\code{apply_last} added to the end.}
-\item{'control_rules}{Rules that influence the control flow.
-These will be applied in the first pass when validating data.}
-\item{'transform_rules'}{Rules that transform data.
-These will be applied in the second pass when validating data.}
-\item{'validate_rules'}{Rules that validate data.
-These will be applied in the penultimate pass when validating.}
-\item{'finalize_rules'}{Rules that finalize validation.
-These will be applied in the last pass when validating, after all
-other rules have been applied. These rules will only apply if no
-previous rules for that node have failed.}
-\item{\code{str_to_fn_rules}}{Schema rules that are allowed to have string
-or function values, with string values being converted to functions
-automatically during schema validation.}
-\item{\code{str_to_fn_converter}}{A function that converts string values to
-functions for the \code{str_to_fn_rules}.}
-\item{\code{type_names}}{A character vector of allowed type names, derived
-from the keys of the \code{type_map} environment.}
-\item{\code{type_map}}{An environment mapping type names to type definition
-functions.}
-\item{\code{coerce_names}}{A character vector of allowed coercion rule names,
-derived from the keys of the \code{coerce_map} environment.}
-\item{\code{coerce_map}}{An environment mapping type names to coercion
-functions.}
-\item{\code{rule_names}}{A character vector of all (non-cross) rule names.}
-\item{\code{schema_rules}}{An environment containing the schema rule
-functions.}
-\item{\code{cross_rule_names}}{A character vector of allowed schema cross
-rule names, derived from the keys of the \code{cross_rules}
-environment.}
-\item{\code{cross_rules}}{An environment containing the schema cross
-rule functions (rules that check relationships between multiple schema
-rule values).}
-\item{\code{validator_rules}}{An environment containing the validator rule
-functions.}
-}
+A \code{Registry} S7 object.
 }
 \description{
-An S7 class that defines rules for validating data against a \link{Schema}.
+Create a \code{Registry} object that defines and stores rules for validating
+data against a \link{Schema}.
 }
 \details{
-The \code{Registry} class serves as a central repository for all the rules used in
-schema and data validation for \code{fluffy} based workflows. It includes builtin
-rules for common validation tasks and allows for the addition of custom
-rules.
+The \code{Registry} class serves as a central repository for all the rules used
+in \code{fluffy} schema and data validation. It is passed to the \link{Schema} and
+\link{Validator} classes, which use the rules stored in the \code{Registry} to
+validate schemas and data, respectively.
 
-Registry objects are automatically created in \code{Schema} objects
-(which are passed to \code{Validator} objects), and rules can be added to the
-registry directly within those objects by using the rule-adding generic
-functions. It is therefore not necessary to create a \code{Registry} object
-separately if one does not wish.
+To see the available builtin rules,
+use the helper function \code{\link[=show_builtins]{show_builtins()}}, which lists all the builtin
+rules in a \code{Registry}.
 
-However, \code{Schema} and \code{Validator} objects are automatically re-validated
-when rules are added, so for the addition of many new rules, it is
-beneficial to create a \code{Registry} object, add all the rules to it, and
-then pass it to the other classes.
+As \code{Registry} objects are automatically created in the \code{Schema} constructor,
+which is in turn called in the \code{Validator} constructor, a \code{Registry} does not
+need to be created separately to use \code{fluffy}'s validation functionality.
+Custom rules can also be added to the \code{Registry} within a \code{Schema} or
+\code{Validator}  object. However, rule addition will trigger re-validation of
+the given object, so for the addition of many new rules, it is beneficial
+to create a \code{Registry} object, add all the rules to it, and then pass it to
+the other classes.
 
-For full details see the helper function \code{\link[=show_builtins]{show_builtins()}} or the
-\href{../doc/validation-rules.html}{rules vignette}.
+For full details see the vignettes on
+\href{../doc/validation-rules.html}{builtin rules},
+\href{../doc/validating-data.html}{data validation}, and
+\href{../doc/custom-rules.html}{adding custom rules}.
 }
 \examples{
 r <- Registry()
@@ -85,5 +51,63 @@ is.Registry(r)
 }
 \seealso{
 \link{Schema} and \link{Validator} constructors. \link{add_rule} for adding
-rules to a registry.
+rules to a \code{Registry}.
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@rule_names}}{(Read-only)
+All rules, in order of evaluation.
+Derived from the combination of the
+\code{control}, \code{transform}, \code{validate}, and \code{finalize} rules.}
+
+\item{\code{@control_rules}}{Rules that influence the control flow.
+These will be applied in the first pass when validating data.}
+
+\item{\code{@transform_rules}}{Rules that transform data. These will be applied
+in the second pass when validating data.}
+
+\item{\code{@validate_rules}}{Rules that validate data. These will be applied
+in the penultimate pass when validating.}
+
+\item{\code{@finalize_rules}}{Rules that finalize validation. These will be
+applied in the last pass when validating, after all other rules have been
+applied. These rules will only apply if no previous rules for that schema
+node have failed.}
+
+\item{\code{@str_to_fn_rules}}{Schema rules that are allowed to have string or
+function values, with string values being converted to functions
+automatically during schema validation.}
+
+\item{\code{@str_to_fn_converter}}{Function that converts string values to functions for the
+\verb{@str_to_fn_rules}.}
+
+\item{\code{@type_names}}{(Read-only)
+Allowed type names. Derived from the keys of the
+\verb{@type_map}.}
+
+\item{\code{@type_map}}{Environment mapping type names to type definition functions. Can only
+be added to via \code{\link[=add_type_rule]{add_type_rule()}}.}
+
+\item{\code{@coerce_names}}{(Read-only)
+Allowed coercion names. Derived from the keys of the
+\verb{@coerce_map}.}
+
+\item{\code{@coerce_map}}{Environment mapping coercion names to coercion functions. Can only
+be added to via \code{\link[=add_coerce_rule]{add_coerce_rule()}}.}
+
+\item{\code{@schema_rules}}{Environment mapping schema rule names to schema validation functions. Can
+only be added to via \code{\link[=add_rule]{add_rule()}}.}
+
+\item{\code{@cross_rule_names}}{(Read-only)
+Schema cross rules. Derived from the keys
+of the \verb{@cross_rules} environment.}
+
+\item{\code{@cross_rules}}{Environment containing the schema cross rule functions (rules that check
+relationships between multiple schema rule values). Can only be added to
+via \code{\link[=add_cross_rule]{add_cross_rule()}}.}
+
+\item{\code{@validator_rules}}{Environment mapping validator rule names to validator functions. Can only
+be added to via \code{\link[=add_rule]{add_rule()}}.}
+}}
+

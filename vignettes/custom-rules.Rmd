@@ -17,8 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-# library(fluffy)
-devtools::load_all()
+library(fluffy)
 ```
 
 Custom rules can be used to validate schemas and data in ways that the [builtin rules](validation-rules.html) don't cover. Rules are stored in `Registry` objects and thus custom rules can be added to any instantiated fluffy class objects: `Registry`, `Schema` or `Validator`.
@@ -35,7 +34,7 @@ add_rule(
   name,
   validator_fn,
   schema_fn = NULL,
-  rule_type = c("validate", "control", "transform")
+  rule_type = c("validate", "control", "transform", "finalize")
 )
 ```
 
@@ -157,15 +156,65 @@ The 'finalize' pass behaves slightly differently to the others, in that rules in
 
 ### Custom type/coerce rules
 
+`type` and `coerce` rules can be added more simply with `add_type_rule` and `add_coerce_rule`. They expand the builtin `type` and `coerce` rules, so the custom type/coerce rules will be applied alongside the builtin ones.
 
+These functions take the fluffy object, the name of the new schema type/coerce value, and a function that takes one argument, in the same vein as base R `is.*()` and `as.*()` functions.
+
+```{r add_type_rule add_coerce_rule definition, eval=FALSE}
+add_type_rule(obj, type_name, type_fn)
+
+add_coerce_rule(obj, coerce_name, coerce_fn)
+```
+```{r add_type_rule example}
+s <- Schema(list(type = "my_type"))
+s@valid
+s@errors
+
+s <- add_type_rule(s, "my_type", function(x) isTRUE(class(x) == "my_type"))
+s@valid
+
+v <- Validator(1L, s)
+v@valid
+v@errors
+
+s@schema <- list(coerce = "my_type", type = "my_type")
+s@valid
+s@errors
+
+s <- add_coerce_rule(s, "my_type", function(x) structure(x, class = "my_type"))
+s@valid
+
+v <- Validator(1L, s)
+v@valid
+v@data
+```
 
 ### Custom cross rules
 
+Cross rules operate on schema nodes that contain specified rules, comparing the values or two or more of those rules to check for clashes. `add_cross_rule` takes the fluffy object, the name of the new cross rule, the name of the rules to operate on, and a function that checks the schema values and returns `NULL` if valid or a character string error message if invalid.
 
+```{r add_cross_rule definition, eval=FALSE}
+add_cross_rule(obj, name, rule_names, cross_fn)
+```
 
+The cross rule function takes the same arguments as the schema validation function. However, the positional argument now represents a schema node, which is a list, as opposed to a single schema field. To implement the required behaviour, access the rule elements by name:
 
+```{r add_cross_rule example}
+s <- Schema(list(min_length = 5, min_val = 5))
 
-
+s <- add_cross_rule(
+  s,
+  name = "min_length_cannot_equal_min_val",
+  rule_names = c("min_length", "min_val"),
+  cross_fn = function(node, ...) {
+    if (node$min_length >= node$min_val) {
+      "min_length must be less than min_val."
+    }
+  }
+)
+s@valid
+s@errors
+```
 
 ### Examples
 

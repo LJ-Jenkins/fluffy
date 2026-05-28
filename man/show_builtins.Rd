@@ -2,7 +2,7 @@
 % Please edit documentation in R/registry_defaults.r
 \name{show_builtins}
 \alias{show_builtins}
-\title{Show fluffy Builtin Rules}
+\title{Show Builtin Rules}
 \usage{
 show_builtins(rules = c("all", "validation", "cross"))
 }
@@ -17,7 +17,7 @@ with information on the builtin rules for the rule type specified.
 The data.frame(s) have an attached class \code{fluffy_rule_info}.
 }
 \description{
-Helper to show the builtin rules in a Registry, and their behaviour.
+Helper to show the builtin rules in a \code{Registry}, and their behaviour.
 }
 \note{
 The \code{fluffy_rule_info} class has a custom print method that formats the
