@@ -1,5 +1,5 @@
 Package: fluffy
-Title: Schema-Based Validation of R Objects With User-Defined Rules
+Title: Schema-Based Validation of R Objects with User-Defined Rules
 Version: 0.0.0.9000
 Authors@R: 
     person("Luke", "Jenkins", , "luke-jenkins-dev@outlook.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-7206-7242"))
@@ -22,6 +22,7 @@ Imports:
     methods,
     S7,
     utils
-URL: https://lj-jenkins.github.io/fluffy/
+URL: https://lj-jenkins.github.io/fluffy/, https://github.com/LJ-Jenkins/fluffy
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0
+BugReports: https://github.com/LJ-Jenkins/fluffy/issues
