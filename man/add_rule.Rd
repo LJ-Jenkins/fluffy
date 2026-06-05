@@ -39,7 +39,7 @@ is used.
 \item \code{error}: a string error message if validation fails. If not returned,
 validation is assumed to have succeeded.
 \item \code{continue}: boolean indicating whether to continue validating subsequent
-rules. If not returned, assumed to be \code{TRUE}.
+rules in the schema node. If not returned, assumed to be \code{TRUE}.
 }}
 
 \item{schema_fn}{Function to validate a schema field definition. If \code{NULL}, a
@@ -64,7 +64,7 @@ schema fields are valid, and a string error message if invalid.}
 \item{type_fn, coerce_fn}{Function to validate/coerce a field value.}
 }
 \value{
-Invisibly returns the input object with the new rule added to the
+The input object with the new rule added to the
 associated \code{Registry}.
 }
 \description{
@@ -75,12 +75,6 @@ Add validator, schema, (schema) cross, type, or coerce rules to a
 To be able to correctly pass the required arguments for the
 data/schema validations, rule functions must have the following
 argument semantics:
-
-Note: \code{field} and \code{schema_field} are positional, and thus can be
-called anything, whilst \code{.self} (the object itself: \code{Schema} for
-schema rules, \code{Validator} for validator rules) and \code{.data} (the
-full data in the walk) are named arguments and must be
-named as such.
 
 type/coerce rule functions:
 \itemize{
@@ -103,7 +97,13 @@ validator rule functions:
 \item \verb{function(field, schema_field, .self, .data)}
 }
 
-As \link{Registry} uses environments to store rules, which are
+Note: \code{field} and \code{schema_field} are positional, and thus can be
+named anything, whilst \code{.self} (the object itself: \code{Schema} for
+schema rules, \code{Validator} for validator rules) and \code{.schema}/\code{.data}
+(the full schema/data in the respective walks) are named arguments
+and must be named as such.
+
+Despite \link{Registry} using environments to store rules, which are
 mutable, \link{add_rule} methods copy the existing environment
 and the new rule into a new environment, meaning that the
 original object is not modified. See examples.
@@ -117,11 +117,11 @@ vignettes on
 \href{../doc/validating-data.html}{data validation}.
 }
 \examples{
-mySchema <- Schema(list(check_my_attr = 1L))
-mySchema@errors # doesn't recognise rule
+s <- Schema(list(check_my_attr = 1L))
+s@errors # doesn't recognise rule
 
-mySchema <- add_rule(
-  obj = mySchema,
+s <- add_rule(
+  obj = s,
   name = "check_my_attr",
   validator_fn = function(data_field, schema_field, ...) {
     if (attr(data_field, "my_attr") != schema_field) {
@@ -137,25 +137,25 @@ mySchema <- add_rule(
 )
 
 # rule recognised and schema automatically re-validated
-mySchema@errors
+s@errors
 
 # validation works with the new rule
-mySchema@schema$check_my_attr <- "Hi"
-Validator(structure(1L, my_attr = "Hi"), mySchema)@valid # TRUE
+s@schema$check_my_attr <- "Hi"
+Validator(structure(1L, my_attr = "Hi"), s)@valid # TRUE
 
 # schema cross rules invalidate when constituent rules are invalid
-mySchema <- add_cross_rule(
-  obj = mySchema,
+s <- add_cross_rule(
+  obj = s,
   name = "min_and_max_val_add_to_10",
   rule_names = c("min_val", "max_val"),
   cross_fn = function(schema_field, ...) {
     if (schema_field$min_val + schema_field$max_val == 10) {
-      "min_val and max_val cannot add to 10."
+      "`min_val` and `max_val` cannot add to 10."
     }
   }
 )
-mySchema@schema <- list(min_val = 2, max_val = 8)
-mySchema@errors # cross rule error
+s@schema <- list(min_val = 2, max_val = 8)
+s@errors # cross rule error
 
 r <- Registry()
 r <- add_type_rule(r, "my_type", function(x) {

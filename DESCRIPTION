@@ -1,9 +1,9 @@
 Package: fluffy
-Title: Schema-Based Validation of R Objects with User-Defined Rules
+Title: Schema-Based Validation of 'R' Objects with User-Defined Rules
 Version: 0.0.0.9000
 Authors@R: 
     person("Luke", "Jenkins", , "luke-jenkins-dev@outlook.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-7206-7242"))
-Description: A schema-based validation framework for R objects using user-defined rules. Provides three S7 classes 'Registry', 'Schema', and 'Validator' to manage rules, define list-based schemas, and validate data in a flexible and extensible manner.
+Description: A schema-based validation framework for 'R' objects using user-defined rules. Provides three 'S7' classes 'Registry', 'Schema', and 'Validator' to manage rules, define list-based schemas, and validate data in a flexible and extensible manner.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

@@ -21,12 +21,12 @@ use for schema validation.}
 \item{error}{Single logical value. If \code{TRUE}, the constructor throws
 an error when the schema is invalid.}
 
-\item{...}{Named arguments passed to internal error message formatting functions:
+\item{...}{Named arguments passed to internal error message formatting:
 \code{max_depth}, \code{max_width}, \code{max_rows}, and \code{UTF8} which control the
 truncation and printing of the error message when the schema
-validation fails. \code{max_} arguments accept integerish scalar values,
+validation fails. \verb{max_*} arguments accept integerish scalar values,
 and \code{UTF8} accepts a single logical value. Unnamed arguments or
-names other than the above will be ignored.}
+named arguments other than the above will be ignored.}
 
 \item{x}{Object to be tested.}
 }

@@ -60,7 +60,7 @@
     valid <- .rule_fn_args_valid(
       length(sargs),
       c(2L, 3L),
-      c(".self", ".schema"), # c(".self", ".data"),
+      c(".self", ".schema"),
       sargs
     )
   }
@@ -135,7 +135,7 @@
     schema_fn
   )
 
-  S7::validate(obj)
+  (S7::validate(obj))
 }
 
 S7::method(add_rule, Registry) <- function(
@@ -169,7 +169,7 @@ S7::method(add_rule, Schema) <- function(
   cache <- S7::prop(obj, ".schema_cache")
   cache$result <- NULL
 
-  S7::validate(obj)
+  (S7::validate(obj))
 }
 
 S7::method(add_rule, Validator) <- function(
@@ -195,5 +195,5 @@ S7::method(add_rule, Validator) <- function(
     check = FALSE
   ) <- S7::validate(S7::prop(obj, "Schema"))
 
-  S7::validate(obj)
+  (S7::validate(obj))
 }

@@ -156,7 +156,9 @@ error_print_opts_prop <- function(obj_class) {
         # so check that list
         if (!is.list(value)) {
           stop(
-            paste0("<fluffy::", obj_class, ">@error_print_opts must be a list."),
+            paste0(
+              "<fluffy::", obj_class, ">@error_print_opts must be a list."
+            ),
             call. = FALSE
           )
         }

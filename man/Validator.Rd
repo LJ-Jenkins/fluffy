@@ -63,12 +63,12 @@ v@valid # TRUE
 
 # Schema object can be given directly
 s <- Schema(list(a = list(type = "numeric"), b = list(type = "character")))
-v <- Validator(list("Hello", 42), s)
+v <- Validator(list(a = "Hello", b = 42), s)
 v@valid # FALSE
 v@errors
 
 # To error on invalid schema or data
-try(Validator(list("Hello", 42), s, error = TRUE))
+try(Validator(list(a = "Hello", b = 42), s, error = TRUE))
 
 # Invalid schemas show their errors
 try(Validator(list(42), list(type = 123), error = TRUE))

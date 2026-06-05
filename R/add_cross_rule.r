@@ -34,7 +34,9 @@
     )
   )
 
-  S7::validate(obj)
+  # wrap with () as S7::validate returns invisibly but I feel
+  # this may make users think this adds by ref.
+  (S7::validate(obj))
 }
 
 S7::method(add_cross_rule, Registry) <- function(
@@ -63,7 +65,7 @@ S7::method(add_cross_rule, Schema) <- function(
   cache <- S7::prop(obj, ".schema_cache")
   cache$result <- NULL
 
-  S7::validate(obj)
+  (S7::validate(obj))
 }
 
 S7::method(add_cross_rule, Validator) <- function(
@@ -88,9 +90,5 @@ S7::method(add_cross_rule, Validator) <- function(
 
   # don't need to invalidate the validator cache as that is done
   # in the schema setter
-
-  # validator_cache <- S7::prop(obj, ".validator_cache")
-  # validator_cache$result <- NULL
-
-  S7::validate(obj)
+  (S7::validate(obj))
 }
