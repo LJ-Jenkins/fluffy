@@ -15,7 +15,13 @@ This package is under development and subject to change constantly.
 
 ## Installation
 
-You can install the development version of fluffy like so:
+Install the latest release of fluffy from CRAN:
+
+``` r
+install.packages("fluffy")
+```
+
+You can install the development version of fluffy from GitHub:
 
 ``` r
 # install.packages("pak")
