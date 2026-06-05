@@ -37,12 +37,12 @@ is.Schema(x)
 
 - ...:
 
-  Named arguments passed to internal error message formatting functions:
+  Named arguments passed to internal error message formatting:
   `max_depth`, `max_width`, `max_rows`, and `UTF8` which control the
   truncation and printing of the error message when the schema
-  validation fails. `max_` arguments accept integerish scalar values,
-  and `UTF8` accepts a single logical value. Unnamed arguments or names
-  other than the above will be ignored.
+  validation fails. `max_*` arguments accept integerish scalar values,
+  and `UTF8` accepts a single logical value. Unnamed arguments or named
+  arguments other than the above will be ignored.
 
 - x:
 

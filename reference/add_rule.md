@@ -51,7 +51,8 @@ add_coerce_rule(obj, coerce_name, coerce_fn)
     returned, validation is assumed to have succeeded.
 
   - `continue`: boolean indicating whether to continue validating
-    subsequent rules. If not returned, assumed to be `TRUE`.
+    subsequent rules in the schema node. If not returned, assumed to be
+    `TRUE`.
 
 - schema_fn:
 
@@ -87,18 +88,12 @@ add_coerce_rule(obj, coerce_name, coerce_fn)
 
 ## Value
 
-Invisibly returns the input object with the new rule added to the
-associated `Registry`.
+The input object with the new rule added to the associated `Registry`.
 
 ## Details
 
 To be able to correctly pass the required arguments for the data/schema
 validations, rule functions must have the following argument semantics:
-
-Note: `field` and `schema_field` are positional, and thus can be called
-anything, whilst `.self` (the object itself: `Schema` for schema rules,
-`Validator` for validator rules) and `.data` (the full data in the walk)
-are named arguments and must be named as such.
 
 type/coerce rule functions:
 
@@ -121,8 +116,15 @@ validator rule functions:
 
 - `function(field, schema_field, .self, .data)`
 
-As [Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
-uses environments to store rules, which are mutable, add_rule methods
+Note: `field` and `schema_field` are positional, and thus can be named
+anything, whilst `.self` (the object itself: `Schema` for schema rules,
+`Validator` for validator rules) and `.schema`/`.data` (the full
+schema/data in the respective walks) are named arguments and must be
+named as such.
+
+Despite
+[Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
+using environments to store rules, which are mutable, add_rule methods
 copy the existing environment and the new rule into a new environment,
 meaning that the original object is not modified. See examples.
 
@@ -145,14 +147,14 @@ classes.
 ## Examples
 
 ``` r
-mySchema <- Schema(list(check_my_attr = 1L))
-mySchema@errors # doesn't recognise rule
+s <- Schema(list(check_my_attr = 1L))
+s@errors # doesn't recognise rule
 #> $check_my_attr
 #> [1] "Unknown rule: `check_my_attr`."
 #> 
 
-mySchema <- add_rule(
-  obj = mySchema,
+s <- add_rule(
+  obj = s,
   name = "check_my_attr",
   validator_fn = function(data_field, schema_field, ...) {
     if (attr(data_field, "my_attr") != schema_field) {
@@ -168,34 +170,34 @@ mySchema <- add_rule(
 )
 
 # rule recognised and schema automatically re-validated
-mySchema@errors
+s@errors
 #> $check_my_attr
 #> [1] "Must be length 1 character"
 #> 
 
 # validation works with the new rule
-mySchema@schema$check_my_attr <- "Hi"
-Validator(structure(1L, my_attr = "Hi"), mySchema)@valid # TRUE
+s@schema$check_my_attr <- "Hi"
+Validator(structure(1L, my_attr = "Hi"), s)@valid # TRUE
 #> [1] TRUE
 
 # schema cross rules invalidate when constituent rules are invalid
-mySchema <- add_cross_rule(
-  obj = mySchema,
+s <- add_cross_rule(
+  obj = s,
   name = "min_and_max_val_add_to_10",
   rule_names = c("min_val", "max_val"),
   cross_fn = function(schema_field, ...) {
     if (schema_field$min_val + schema_field$max_val == 10) {
-      "min_val and max_val cannot add to 10."
+      "`min_val` and `max_val` cannot add to 10."
     }
   }
 )
-mySchema@schema <- list(min_val = 2, max_val = 8)
-mySchema@errors # cross rule error
+s@schema <- list(min_val = 2, max_val = 8)
+s@errors # cross rule error
 #> $min_val
-#> [1] "min_val and max_val cannot add to 10."
+#> [1] "`min_val` and `max_val` cannot add to 10."
 #> 
 #> $max_val
-#> [1] "min_val and max_val cannot add to 10."
+#> [1] "`min_val` and `max_val` cannot add to 10."
 #> 
 
 r <- Registry()

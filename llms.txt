@@ -194,9 +194,8 @@ Validator(
 
 ## Overview
 
-fluffy provides three
-[S7](https://cran.r-project.org/web/packages/S7/index.html) classes:
-`Registry`, `Schema`, and `Validator`.
+fluffy provides three [S7](https://CRAN.R-project.org/package=S7)
+classes: `Registry`, `Schema`, and `Validator`.
 
 `Registry` defines rules and stores all built-in fluffy rule names and
 definitions.
@@ -373,10 +372,22 @@ Validator(json_data, json_schema, error = TRUE)
 # works for any data.frame data, e.g., sav, dta, xls, xlsx, csv, tsv, etc.
 rect_schema <- list(
   type = "data.frame",
-  chicken = list(type = "character", nzchar = TRUE),
-  sex = list(coerce = "factor", levels = c("rooster", "hen")),
-  eggs_laid = list(type = "integer", positive = TRUE),
-  motto = list(type = "character", nzchar = TRUE)
+  chicken = list(
+    type = "character",
+    nzchar = TRUE
+  ),
+  sex = list(
+    coerce = "factor",
+    levels = c("rooster", "hen")
+  ),
+  eggs_laid = list(
+    type = "integer",
+    positive = TRUE
+  ),
+  motto = list(
+    type = "character",
+    nzchar = TRUE
+  )
 )
 
 rect_data <- readr::read_csv(

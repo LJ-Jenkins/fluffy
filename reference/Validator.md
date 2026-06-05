@@ -125,29 +125,29 @@ v@valid # TRUE
 
 # Schema object can be given directly
 s <- Schema(list(a = list(type = "numeric"), b = list(type = "character")))
-v <- Validator(list("Hello", 42), s)
+v <- Validator(list(a = "Hello", b = 42), s)
 v@valid # FALSE
 #> [1] FALSE
 v@errors
 #> $a
 #> $a$type
-#> [1] "No data for field."
+#> [1] "Is not type `numeric`."
 #> 
 #> 
 #> $b
 #> $b$type
-#> [1] "No data for field."
+#> [1] "Is not type `character`."
 #> 
 #> 
 
 # To error on invalid schema or data
-try(Validator(list("Hello", 42), s, error = TRUE))
+try(Validator(list(a = "Hello", b = 42), s, error = TRUE))
 #> Error : <fluffy::Validator> object is invalid:
 #> - Data validation failed with the following errors:
 #> ├─ a
-#> │ └─ type: No data for field.
+#> │ └─ type: Is not type `numeric`.
 #> └─ b
-#>   └─ type: No data for field.
+#>   └─ type: Is not type `character`.
 
 # Invalid schemas show their errors
 try(Validator(list(42), list(type = 123), error = TRUE))

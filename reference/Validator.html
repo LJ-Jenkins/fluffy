@@ -27,6 +27,7 @@ using a Schema."><meta property="og:image" content="https://lj-jenkins.github.io
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/LJ-Jenkins/fluffy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -35,7 +36,7 @@ using a Schema."><meta property="og:image" content="https://lj-jenkins.github.io
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Validator</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/LJ-Jenkins/fluffy/blob/main/R/ab_Validator.r" class="external-link"><code>R/ab_Validator.r</code></a></small>
       <div class="d-none name"><code>Validator.Rd</code></div>
     </div>
 
@@ -155,29 +156,29 @@ Boolean; <code>TRUE</code> if the schema is valid and all data validation rules 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Schema object can be given directly</span></span></span>
 <span class="r-in"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="Schema.html">Schema</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span>, b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu">Validator</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Hello"</span>, <span class="fl">42</span><span class="op">)</span>, <span class="va">s</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu">Validator</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="st">"Hello"</span>, b <span class="op">=</span> <span class="fl">42</span><span class="op">)</span>, <span class="va">s</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">v</span><span class="op">@</span><span class="va">valid</span> <span class="co"># FALSE</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-in"><span><span class="va">v</span><span class="op">@</span><span class="va">errors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $a$type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "No data for field."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Is not type `numeric`."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $b</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $b$type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "No data for field."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Is not type `character`."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># To error on invalid schema or data</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">Validator</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Hello"</span>, <span class="fl">42</span><span class="op">)</span>, <span class="va">s</span>, error <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">Validator</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="st">"Hello"</span>, b <span class="op">=</span> <span class="fl">42</span><span class="op">)</span>, <span class="va">s</span>, error <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error : &lt;fluffy::Validator&gt; object is invalid:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - Data validation failed with the following errors:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ├─ a</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> │ └─ type: No data for field.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> │ └─ type: Is not type `numeric`.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> └─ b</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   └─ type: No data for field.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   └─ type: Is not type `character`.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Invalid schemas show their errors</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">Validator</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fl">123</span><span class="op">)</span>, error <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>

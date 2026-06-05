@@ -7,12 +7,15 @@
 
 ## Citation
 
-Jenkins L (2026). *fluffy: Schema-Based Validation of R Objects With
+Source:
+[`DESCRIPTION`](https://github.com/LJ-Jenkins/fluffy/blob/main/DESCRIPTION)
+
+Jenkins L (2026). *fluffy: Schema-Based Validation of 'R' Objects with
 User-Defined Rules*. R package version 0.0.0.9000,
 <https://lj-jenkins.github.io/fluffy/>.
 
     @Manual{,
-      title = {fluffy: Schema-Based Validation of R Objects With User-Defined Rules},
+      title = {fluffy: Schema-Based Validation of 'R' Objects with User-Defined Rules},
       author = {Luke Jenkins},
       year = {2026},
       note = {R package version 0.0.0.9000},

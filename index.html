@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Schema-Based Validation of R Objects With User-Defined Rules • fluffy</title>
+<title>Schema-Based Validation of R Objects with User-Defined Rules • fluffy</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Schema-Based Validation of R Objects With User-Defined Rules">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Schema-Based Validation of R Objects with User-Defined Rules">
 <meta name="description" content="A schema-based validation framework for R objects using user-defined rules. Provides three S7 classes Registry, Schema, and Validator to manage rules, define list-based schemas, and validate data in a flexible and extensible manner.">
 <meta property="og:description" content="A schema-based validation framework for R objects using user-defined rules. Provides three S7 classes Registry, Schema, and Validator to manage rules, define list-based schemas, and validate data in a flexible and extensible manner.">
 <meta property="og:image" content="https://lj-jenkins.github.io/fluffy/logo.png">
@@ -52,6 +52,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/LJ-Jenkins/fluffy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -256,7 +257,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>fluffy provides three <a href="https://cran.r-project.org/web/packages/S7/index.html" class="external-link">S7</a> classes: <code>Registry</code>, <code>Schema</code>, and <code>Validator</code>.</p>
+<p>fluffy provides three <a href="https://CRAN.R-project.org/package=S7" class="external-link">S7</a> classes: <code>Registry</code>, <code>Schema</code>, and <code>Validator</code>.</p>
 <p><code>Registry</code> defines rules and stores all built-in fluffy rule names and definitions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/Registry.html">Registry</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -405,10 +406,22 @@
 <span><span class="co"># works for any data.frame data, e.g., sav, dta, xls, xlsx, csv, tsv, etc.</span></span>
 <span><span class="va">rect_schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  type <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
-<span>  chicken <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"character"</span>, nzchar <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>coerce <span class="op">=</span> <span class="st">"factor"</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rooster"</span>, <span class="st">"hen"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  eggs_laid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"integer"</span>, positive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  motto <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"character"</span>, nzchar <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  chicken <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"character"</span>,</span>
+<span>    nzchar <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    coerce <span class="op">=</span> <span class="st">"factor"</span>,</span>
+<span>    levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rooster"</span>, <span class="st">"hen"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  eggs_laid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"integer"</span>,</span>
+<span>    positive <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  motto <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"character"</span>,</span>
+<span>    nzchar <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rect_data</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span></span>
@@ -451,7 +464,15 @@
 <p>Please note that this project is released with a <a href="https://lj-jenkins.github.io/fluffy/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/LJ-Jenkins/fluffy/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/LJ-Jenkins/fluffy/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>

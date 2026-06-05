@@ -27,6 +27,7 @@ Registry, Schema, or Validator object."><meta property="og:image" content="https
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/LJ-Jenkins/fluffy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -35,7 +36,7 @@ Registry, Schema, or Validator object."><meta property="og:image" content="https
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Add Rules to a Registry</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/LJ-Jenkins/fluffy/blob/main/R/abb_add_rule_generics.r" class="external-link"><code>R/abb_add_rule_generics.r</code></a></small>
       <div class="d-none name"><code>add_rule.Rd</code></div>
     </div>
 
@@ -85,7 +86,7 @@ is used.</p></li>
 <li><p><code>error</code>: a string error message if validation fails. If not returned,
 validation is assumed to have succeeded.</p></li>
 <li><p><code>continue</code>: boolean indicating whether to continue validating subsequent
-rules. If not returned, assumed to be <code>TRUE</code>.</p></li>
+rules in the schema node. If not returned, assumed to be <code>TRUE</code>.</p></li>
 </ul></dd>
 
 
@@ -124,7 +125,7 @@ schema fields are valid, and a string error message if invalid.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Invisibly returns the input object with the new rule added to the
+    <p>The input object with the new rule added to the
 associated <code>Registry</code>.</p>
     </div>
     <div class="section level2">
@@ -132,11 +133,6 @@ associated <code>Registry</code>.</p>
     <p>To be able to correctly pass the required arguments for the
 data/schema validations, rule functions must have the following
 argument semantics:</p>
-<p>Note: <code>field</code> and <code>schema_field</code> are positional, and thus can be
-called anything, whilst <code>.self</code> (the object itself: <code>Schema</code> for
-schema rules, <code>Validator</code> for validator rules) and <code>.data</code> (the
-full data in the walk) are named arguments and must be
-named as such.</p>
 <p>type/coerce rule functions:</p><ul><li><p><code>function(field)</code></p></li>
 </ul><p>schema/cross rule functions:</p><ul><li><p><code>function(field, ...)</code></p></li>
 <li><p><code>function(field, .self, ...)</code> |
@@ -146,7 +142,12 @@ named as such.</p>
 <li><p><code>function(field, schema_field, .self, ...)</code> |
 <code>function(field, schema_field, .data, ...)</code></p></li>
 <li><p><code>function(field, schema_field, .self, .data)</code></p></li>
-</ul><p>As <a href="Registry.html">Registry</a> uses environments to store rules, which are
+</ul><p>Note: <code>field</code> and <code>schema_field</code> are positional, and thus can be
+named anything, whilst <code>.self</code> (the object itself: <code>Schema</code> for
+schema rules, <code>Validator</code> for validator rules) and <code>.schema</code>/<code>.data</code>
+(the full schema/data in the respective walks) are named arguments
+and must be named as such.</p>
+<p>Despite <a href="Registry.html">Registry</a> using environments to store rules, which are
 mutable, add_rule methods copy the existing environment
 and the new rule into a new environment, meaning that the
 original object is not modified. See examples.</p>
@@ -164,14 +165,14 @@ vignettes on
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mySchema</span> <span class="op">&lt;-</span> <span class="fu"><a href="Schema.html">Schema</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>check_my_attr <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span><span class="op">@</span><span class="va">errors</span> <span class="co"># doesn't recognise rule</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="Schema.html">Schema</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>check_my_attr <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s</span><span class="op">@</span><span class="va">errors</span> <span class="co"># doesn't recognise rule</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $check_my_attr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Unknown rule: `check_my_attr`."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span> <span class="op">&lt;-</span> <span class="fu">add_rule</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  obj <span class="op">=</span> <span class="va">mySchema</span>,</span></span>
+<span class="r-in"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu">add_rule</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  obj <span class="op">=</span> <span class="va">s</span>,</span></span>
 <span class="r-in"><span>  name <span class="op">=</span> <span class="st">"check_my_attr"</span>,</span></span>
 <span class="r-in"><span>  validator_fn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_field</span>, <span class="va">schema_field</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">data_field</span>, <span class="st">"my_attr"</span><span class="op">)</span> <span class="op">!=</span> <span class="va">schema_field</span><span class="op">)</span> <span class="op">{</span></span></span>
@@ -187,34 +188,34 @@ vignettes on
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rule recognised and schema automatically re-validated</span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span><span class="op">@</span><span class="va">errors</span></span></span>
+<span class="r-in"><span><span class="va">s</span><span class="op">@</span><span class="va">errors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $check_my_attr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Must be length 1 character"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># validation works with the new rule</span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span><span class="op">@</span><span class="va">schema</span><span class="op">$</span><span class="va">check_my_attr</span> <span class="op">&lt;-</span> <span class="st">"Hi"</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="Validator.html">Validator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fl">1L</span>, my_attr <span class="op">=</span> <span class="st">"Hi"</span><span class="op">)</span>, <span class="va">mySchema</span><span class="op">)</span><span class="op">@</span><span class="va">valid</span> <span class="co"># TRUE</span></span></span>
+<span class="r-in"><span><span class="va">s</span><span class="op">@</span><span class="va">schema</span><span class="op">$</span><span class="va">check_my_attr</span> <span class="op">&lt;-</span> <span class="st">"Hi"</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="Validator.html">Validator</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fl">1L</span>, my_attr <span class="op">=</span> <span class="st">"Hi"</span><span class="op">)</span>, <span class="va">s</span><span class="op">)</span><span class="op">@</span><span class="va">valid</span> <span class="co"># TRUE</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># schema cross rules invalidate when constituent rules are invalid</span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span> <span class="op">&lt;-</span> <span class="fu">add_cross_rule</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  obj <span class="op">=</span> <span class="va">mySchema</span>,</span></span>
+<span class="r-in"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu">add_cross_rule</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  obj <span class="op">=</span> <span class="va">s</span>,</span></span>
 <span class="r-in"><span>  name <span class="op">=</span> <span class="st">"min_and_max_val_add_to_10"</span>,</span></span>
 <span class="r-in"><span>  rule_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"min_val"</span>, <span class="st">"max_val"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  cross_fn <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">schema_field</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>    <span class="kw">if</span> <span class="op">(</span><span class="va">schema_field</span><span class="op">$</span><span class="va">min_val</span> <span class="op">+</span> <span class="va">schema_field</span><span class="op">$</span><span class="va">max_val</span> <span class="op">==</span> <span class="fl">10</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>      <span class="st">"min_val and max_val cannot add to 10."</span></span></span>
+<span class="r-in"><span>      <span class="st">"`min_val` and `max_val` cannot add to 10."</span></span></span>
 <span class="r-in"><span>    <span class="op">}</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span><span class="op">@</span><span class="va">schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_val <span class="op">=</span> <span class="fl">2</span>, max_val <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mySchema</span><span class="op">@</span><span class="va">errors</span> <span class="co"># cross rule error</span></span></span>
+<span class="r-in"><span><span class="va">s</span><span class="op">@</span><span class="va">schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_val <span class="op">=</span> <span class="fl">2</span>, max_val <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">s</span><span class="op">@</span><span class="va">errors</span> <span class="co"># cross rule error</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $min_val</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "min_val and max_val cannot add to 10."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "`min_val` and `max_val` cannot add to 10."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $max_val</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "min_val and max_val cannot add to 10."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "`min_val` and `max_val` cannot add to 10."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="Registry.html">Registry</a></span><span class="op">(</span><span class="op">)</span></span></span>
