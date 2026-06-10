@@ -3,8 +3,6 @@
 Validate R objects against user-defined schemas, with informative errors
 and data transformation.
 
-This package is under development and subject to change constantly.
-
 ## Installation
 
 Install the latest release of fluffy from CRAN:
