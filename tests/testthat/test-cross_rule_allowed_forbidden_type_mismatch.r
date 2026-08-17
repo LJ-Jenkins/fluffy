@@ -12,7 +12,27 @@ test_that("mismatch between allowed rule type and type rule type", {
   )
 
   s <- Schema(list(
-    field = list(type = "numeric", allowed = c(1, 2))
+    field = list(type = "numeric", allowed = c(1L, 2L))
+  ))
+  expect_true(s@valid)
+
+  s <- Schema(list(
+    field = list(type = "numeric", allowed = c(1.0, 2.0))
+  ))
+  expect_true(s@valid)
+
+  s <- Schema(list(
+    field = list(type = is.numeric, allowed = c(1L, 2L))
+  ))
+  expect_true(s@valid)
+
+  s <- Schema(list(
+    field = list(type = is.double, allowed = c(1L, 2L))
+  ))
+  expect_false(s@valid)
+
+  s <- Schema(list(
+    field = list(type = function(x) is.character(x), allowed = c("a", "b"))
   ))
   expect_true(s@valid)
 })
@@ -31,7 +51,27 @@ test_that("mismatch between forbidden rule type and type rule type", {
   )
 
   s <- Schema(list(
-    field = list(type = "numeric", forbidden = c(1, 2))
+    field = list(type = "numeric", forbidden = c(1L, 2L))
+  ))
+  expect_true(s@valid)
+
+  s <- Schema(list(
+    field = list(type = "numeric", forbidden = c(1.0, 2.0))
+  ))
+  expect_true(s@valid)
+
+  s <- Schema(list(
+    field = list(type = is.numeric, forbidden = c(1L, 2L))
+  ))
+  expect_true(s@valid)
+
+  s <- Schema(list(
+    field = list(type = is.double, forbidden = c(1L, 2L))
+  ))
+  expect_false(s@valid)
+
+  s <- Schema(list(
+    field = list(type = function(x) is.character(x), forbidden = c("a", "b"))
   ))
   expect_true(s@valid)
 })

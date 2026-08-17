@@ -103,6 +103,11 @@ schema rules, \code{Validator} for validator rules) and \code{.schema}/\code{.da
 (the full schema/data in the respective walks) are named arguments
 and must be named as such.
 
+The \code{coerce} rule may use functions with multiple arguments when
+passed directly to a \code{Schema} or \code{Validator} (additional arguments are
+ignored), but \code{Registry} addition is stricter and enforces a single
+argument function signature.
+
 Despite \link{Registry} using environments to store rules, which are
 mutable, \link{add_rule} methods copy the existing environment
 and the new rule into a new environment, meaning that the

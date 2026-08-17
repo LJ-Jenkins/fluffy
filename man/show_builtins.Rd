@@ -12,7 +12,7 @@ standard schema/data validation rules, \code{"cross"} for the cross rules that
 check for consistency between rules, or \code{"all"} to show both.}
 }
 \value{
-List of data.fames if \code{rules = "all"}, otherwise a single data.frame,
+List of data.frames if \code{rules = "all"}, otherwise a single data.frame,
 with information on the builtin rules for the rule type specified.
 The data.frame(s) have an attached class \code{fluffy_rule_info}.
 }

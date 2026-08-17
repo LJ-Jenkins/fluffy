@@ -1,7 +1,8 @@
 test_that("Schema coerce rule: valid string or function passes, others fail", {
   expect_true(Schema(list(coerce = function(x) x))@valid)
-  expect_false(Schema(list(coerce = function(x, y) x))@valid)
+  expect_true(Schema(list(coerce = function(x, y) x))@valid)
   expect_false(Schema(list(coerce = function() NULL))@valid)
+  expect_true(Schema(list(type = is.numeric))@valid)
 
   # don't do str2fn conversion
   expect_false(Schema(list(coerce = r"{\(x) x}"))@valid)
@@ -47,7 +48,7 @@ test_that("Validator coerce rule: coerces if value present", {
   v <- Validator(
     list(x = "123", y = 123, z = list(x = 1, y = 2)),
     Schema(list(
-      x = list(coerce = function(x) as.numeric(x)),
+      x = list(coerce = as.numeric),
       y = list(coerce = function(x) as.character(x)),
       z = list(coerce = function(x) as.data.frame(x))
     ))

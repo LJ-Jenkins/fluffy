@@ -158,7 +158,7 @@ The 'finalize' pass behaves slightly differently to the others, in that rules in
 
 `type` and `coerce` rules can be added more simply with `add_type_rule` and `add_coerce_rule`. They expand the builtin `type` and `coerce` rules, so the custom type/coerce rules will be applied alongside the builtin ones.
 
-These functions take the fluffy object, the name of the new schema type/coerce value, and a function that takes one argument, in the same vein as base R `is.*()` and `as.*()` functions.
+These functions take the fluffy object, the name of the new schema type/coerce value, and a function that takes one argument, in the same vein as base R `is.*()` and `as.*()` functions. Note that the function must take a single argument, as the `Registry` will check the function signature and throw an error if it does not match. Functions that take multiple arguments can be used when passed directly to a `Schema` or `Validator`, but the additional arguments will be ignored.
 
 ```{r add_type_rule add_coerce_rule definition, eval=FALSE}
 add_type_rule(obj, type_name, type_fn)

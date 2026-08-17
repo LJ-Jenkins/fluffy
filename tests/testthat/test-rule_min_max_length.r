@@ -7,7 +7,7 @@ test_that(
   }
 )
 
-test_that("Validator min/max _length rule rule: error if no field", {
+test_that("Validator min/max _length rule: error if no field", {
   v <- Validator(
     list(name = "test"),
     Schema(list(

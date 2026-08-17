@@ -59,6 +59,14 @@ For full details see the vignettes on
 \href{../doc/validating-data.html}{data validation}, and
 \href{../doc/custom-rules.html}{adding custom rules}.
 }
+\note{
+The \code{coerce} rule may use functions with multiple arguments when
+passed directly to a \code{Schema} or \code{Validator}. Only the field value is
+passed to the function, and any additional arguments are ignored. Thus,
+\code{as.numeric} is valid as a \code{coerce} rule in a schema definition, but cannot
+be added to a \code{Registry}, which enforces a strict one-argument function
+signature.
+}
 \examples{
 # A valid schema
 s <- Schema(list(

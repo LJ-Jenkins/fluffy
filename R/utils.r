@@ -4,6 +4,8 @@
 # to match new base R version
 "%notin%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
 
+fml_args <- function(x) formals(args(x))
+
 is_integerish <- function(x) {
   (x %% 1) == 0
 }

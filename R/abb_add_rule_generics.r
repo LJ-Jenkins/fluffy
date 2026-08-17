@@ -71,6 +71,11 @@
 #' (the full schema/data in the respective walks) are named arguments
 #' and must be named as such.
 #'
+#' The `coerce` rule may use functions with multiple arguments when
+#' passed directly to a `Schema` or `Validator` (additional arguments are
+#' ignored), but `Registry` addition is stricter and enforces a single
+#' argument function signature.
+#'
 #' Despite [Registry] using environments to store rules, which are
 #' mutable, [add_rule] methods copy the existing environment
 #' and the new rule into a new environment, meaning that the

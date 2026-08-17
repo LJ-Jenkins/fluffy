@@ -2,7 +2,7 @@ test_that(
   "Schema coerce_last rule: valid string or function passes, others fail",
   {
     expect_true(Schema(list(coerce_last = function(x) x))@valid)
-    expect_false(Schema(list(coerce_last = function(x, y) x))@valid)
+    expect_true(Schema(list(coerce_last = function(x, y) x))@valid)
     expect_false(Schema(list(coerce_last = function() NULL))@valid)
 
     # don't do str2fn conversion

@@ -4,8 +4,8 @@
 
 .fl_validate_rules <- c(
   "type", "inherits", "allowed", "forbidden", "unique", "positive", "negative",
-  "finite", "allow_na", "sorted",
-  "min_val", "max_val", "min_length", "max_length", "min_nrow", "max_nrow",
+  "finite", "allow_na", "sorted", "min_val", "max_val",
+  "length", "min_length", "max_length", "min_nrow", "max_nrow",
   "min_nchar", "max_nchar", "nzchar", "regex", "levels",
   "ordered_levels", "dependency", "dependencies", "predicate"
 )
@@ -100,7 +100,7 @@
 
 .fl_schema_type_rule <- function(field, .self, ...) {
   if (is.function(field)) {
-    if (length(formals(field)) != 1) {
+    if (length(fml_args(field)) != 1) {
       "Function must have one argument."
     }
   } else if (is.character(field)) {
@@ -116,8 +116,8 @@
 
 .fl_schema_coerce_rule <- function(field, .self, ...) {
   if (is.function(field)) {
-    if (length(formals(field)) != 1) {
-      "Function must have one argument."
+    if (length(fml_args(field)) == 0) {
+      "Function must have at least one argument."
     }
   } else if (is.character(field)) {
     if (!is_nz_string(field)) {
@@ -250,6 +250,7 @@
     sorted = .fl_schema_true_rule,
     min_val = .fl_schema_scalar_numeric_rule,
     max_val = .fl_schema_scalar_numeric_rule,
+    length = .fl_schema_positive_scalar_integerish_rule,
     min_length = .fl_schema_positive_scalar_integerish_rule,
     max_length = .fl_schema_positive_scalar_integerish_rule,
     min_nrow = .fl_schema_positive_scalar_integerish_rule,
@@ -321,6 +322,28 @@
   fn = .fl_cross_fn_min_val_larger_than_max_val
 )
 
+.fl_cross_fn_length_and_min_length <- function(node, ...) {
+  if (!is.null(node$length) && !is.null(node$min_length)) {
+    "Cannot have both `length` and `min_length` rules."
+  }
+}
+
+.fl_cross_rule_length_and_min_length <- list(
+  rules = c("length", "min_length"),
+  fn = .fl_cross_fn_length_and_min_length
+)
+
+.fl_cross_fn_length_and_max_length <- function(node, ...) {
+  if (!is.null(node$length) && !is.null(node$max_length)) {
+    "Cannot have both `length` and `max_length` rules."
+  }
+}
+
+.fl_cross_rule_length_and_max_length <- list(
+  rules = c("length", "max_length"),
+  fn = .fl_cross_fn_length_and_max_length
+)
+
 .fl_cross_fn_min_length_larger_than_max_length <- function(node, ...) {
   if (node$min_length > node$max_length) {
     "`min_length` must be smaller than `max_length`."
@@ -365,9 +388,16 @@
   fn = .fl_cross_fn_allowed_and_forbidden_overlap
 )
 
-.fl_cross_fn_allowed_type_mismatch <- function(node, ...) {
-  if (node$type %notin% class(node$allowed)) {
-    "Values in `allowed` must be of the type specified in `type`."
+.fl_cross_fn_allowed_type_mismatch <- function(node, .self, ...) {
+  if (is.character(node$type)) {
+    # e.g., if(!is.numeric(node$allowed))
+    if (!nested_prop(.self, "Registry", "type_map")[[node$type]](node$allowed)) {
+      "Values in `allowed` must be of the type specified in `type`."
+    }
+  } else { # if not chr then it's a fn
+    if (!node$type(node$allowed)) {
+      "Values in `allowed` must satisfy the `type` predicate."
+    }
   }
 }
 
@@ -376,9 +406,15 @@
   fn = .fl_cross_fn_allowed_type_mismatch
 )
 
-.fl_cross_fn_forbidden_type_mismatch <- function(node, ...) {
-  if (node$type %notin% class(node$forbidden)) {
-    "Values in `forbidden` must be of the type specified in `type`."
+.fl_cross_fn_forbidden_type_mismatch <- function(node, .self, ...) {
+  if (is.character(node$type)) {
+    if (!nested_prop(.self, "Registry", "type_map")[[node$type]](node$forbidden)) {
+      "Values in `forbidden` must be of the type specified in `type`."
+    }
+  } else {
+    if (!node$type(node$forbidden)) {
+      "Values in `forbidden` must satisfy the `type` predicate."
+    }
   }
 }
 
@@ -393,6 +429,8 @@
     positive_and_negative = .fl_cross_rule_positive_and_negative,
     required_and_default = .fl_cross_rule_required_and_default,
     min_val_larger_than_max_val = .fl_cross_rule_min_val_larger_than_max_val,
+    length_and_min_length = .fl_cross_rule_length_and_min_length,
+    length_and_max_length = .fl_cross_rule_length_and_max_length,
     min_length_larger_than_max_length = .fl_cross_rule_min_length_larger_than_max_length,
     min_nrow_larger_than_max_nrow = .fl_cross_rule_min_nrow_larger_than_max_nrow,
     min_nchar_larger_than_max_nchar = .fl_cross_rule_min_nchar_larger_than_max_nchar,
@@ -507,6 +545,12 @@
   }
 }
 
+.fl_validator_length_rule <- function(field, schema_field, ...) {
+  if (length(field) != schema_field) {
+    list(error = paste0("Length must be ", schema_field, "."))
+  }
+}
+
 .fl_validator_min_length_rule <- function(field, schema_field, ...) {
   if (length(field) < schema_field) {
     list(error = paste0("Length must be at least ", schema_field, "."))
@@ -594,6 +638,7 @@
       envir = deep_prop(.self, "Schema", "Registry", "coerce_map")
     )
   }
+
   list(data = schema_field(field))
 }
 
@@ -620,7 +665,7 @@
 }
 
 .fl_validator_predicate_rule <- function(field, schema_field, ...) {
-  res <- if (length(formals(schema_field)) == 1L) {
+  res <- if (length(fml_args(schema_field)) == 1L) {
     schema_field(field)
   } else {
     schema_field(field, ...)
@@ -634,7 +679,7 @@
 }
 
 .fl_validator_apply_rule <- function(field, schema_field, ...) {
-  if (length(formals(schema_field)) == 1L) {
+  if (length(fml_args(schema_field)) == 1L) {
     list(data = schema_field(field))
   } else {
     list(data = schema_field(field, ...))
@@ -662,6 +707,7 @@
     sorted = .fl_validator_sorted_rule,
     min_val = .fl_validator_min_val_rule,
     max_val = .fl_validator_max_val_rule,
+    length = .fl_validator_length_rule,
     min_length = .fl_validator_min_length_rule,
     max_length = .fl_validator_max_length_rule,
     min_nrow = .fl_validator_min_nrow_rule,
@@ -694,7 +740,7 @@
 #' standard schema/data validation rules, `"cross"` for the cross rules that
 #' check for consistency between rules, or `"all"` to show both.
 #' @returns
-#' List of data.fames if `rules = "all"`, otherwise a single data.frame,
+#' List of data.frames if `rules = "all"`, otherwise a single data.frame,
 #' with information on the builtin rules for the rule type specified.
 #' The data.frame(s) have an attached class `fluffy_rule_info`.
 #' @note
@@ -709,129 +755,233 @@
 show_builtins <- function(rules = c("all", "validation", "cross")) {
   rules <- match.arg(rules)
 
-  vrules <- c(
-    "required", "default", "apply", "coerce",
-    "type", "inherits", "allowed", "forbidden",
-    "unique", "positive", "negative", "finite",
-    "allow_na", "sorted", "min_val", "max_val", "min_length",
-    "max_length", "min_nrow", "max_nrow", "min_nchar",
-    "max_nchar", "nzchar", "regex",
-    "levels", "ordered_levels", "dependency", "dependencies",
-    "predicate", "apply_last", "coerce_last"
+  validation <- list(
+    #-- info row
+    " " = c(
+      schema = "Checks schema value is:",
+      data = "Checks/transforms data element:",
+      control = "Stops other rules if:"
+    ),
+    #-- rules
+    required = c(
+      schema = "boolean.",
+      data = "exists.",
+      control = "FALSE and element not present."
+    ),
+    default = c(
+      schema = "non-empty.",
+      data = "exists and inserts `default` if not.",
+      control = "default is used."
+    ),
+    apply = c(
+      schema = "function or a valid string.",
+      data = "applies function.",
+      control = ""
+    ),
+    coerce = c(
+      schema = "1 arg function or a valid string.",
+      data = "coerces.",
+      control = ""
+    ),
+    type = c(
+      schema = "1 arg function or a valid string.",
+      data = "type.",
+      control = ""
+    ),
+    inherits = c(
+      schema = "character vector.",
+      data = "inherits from specified classes.",
+      control = ""
+    ),
+    allowed = c(
+      schema = "non-empty vector.",
+      data = "only values in `allowed` set.",
+      control = ""
+    ),
+    forbidden = c(
+      schema = "non-empty vector.",
+      data = "no values in `forbidden` set.",
+      control = ""
+    ),
+    unique = c(
+      schema = "TRUE.",
+      data = "no duplicates.",
+      control = ""
+    ),
+    positive = c(
+      schema = "TRUE.",
+      data = "is positive (or zero).",
+      control = ""
+    ),
+    negative = c(
+      schema = "TRUE.",
+      data = "is negative (or zero).",
+      control = ""
+    ),
+    finite = c(
+      schema = "TRUE.",
+      data = "is finite.",
+      control = ""
+    ),
+    allow_na = c(
+      schema = "FALSE.",
+      data = "no `NA` values.",
+      control = ""
+    ),
+    sorted = c(
+      schema = "TRUE.",
+      data = "is sorted.",
+      control = ""
+    ),
+    min_val = c(
+      schema = "finite numeric value.",
+      data = "values at least `min_val`.",
+      control = ""
+    ),
+    max_val = c(
+      schema = "finite numeric value.",
+      data = "values at most `max_val`.",
+      control = ""
+    ),
+    length = c(
+      schema = "positive integerish value.",
+      data = "length exactly `length`.",
+      control = ""
+    ),
+    min_length = c(
+      schema = "positive integerish value.",
+      data = "length at least `min_length`.",
+      control = ""
+    ),
+    max_length = c(
+      schema = "positive integerish value.",
+      data = "length at most `max_length`.",
+      control = ""
+    ),
+    min_nrow = c(
+      schema = "positive integerish value.",
+      data = "nrow at least `min_nrow`.",
+      control = ""
+    ),
+    max_nrow = c(
+      schema = "positive integerish value.",
+      data = "nrow at most `max_nrow`.",
+      control = ""
+    ),
+    min_nchar = c(
+      schema = "positive integerish value.",
+      data = "nchar at least `min_nchar`.",
+      control = ""
+    ),
+    max_nchar = c(
+      schema = "positive integerish value.",
+      data = "nchar at most `max_nchar`.",
+      control = ""
+    ),
+    nzchar = c(
+      schema = "boolean.",
+      data = "no empty strings.",
+      control = ""
+    ),
+    regex = c(
+      schema = "string.",
+      data = "matches `regex` pattern.",
+      control = ""
+    ),
+    levels = c(
+      schema = "character vector.",
+      data = "has levels matching `levels` in any order.",
+      control = ""
+    ),
+    ordered_levels = c(
+      schema = "character vector.",
+      data = "has levels matching `ordered_levels` in order.",
+      control = ""
+    ),
+    dependency = c(
+      schema = "character vector, or integerish vector, or list of string/integerish scalars.",
+      data = "dependency field present.",
+      control = ""
+    ),
+    dependencies = c(
+      schema = "list of character vectors, or integerish vectors, or lists of string/integerish scalars.",
+      data = "dependency fields present.",
+      control = ""
+    ),
+    predicate = c(
+      schema = "function or a valid string.",
+      data = "satisfies predicate function.",
+      control = ""
+    ),
+    apply_last = c(
+      schema = "function or a valid string.",
+      data = "applies function if no errors in node.",
+      control = ""
+    ),
+    coerce_last = c(
+      schema = "1 arg function or a valid string.",
+      data = "coerces if no errors in node.",
+      control = ""
+    )
   )
 
-  schema_validation <- c(
-    "boolean.",
-    "non-empty.",
-    "function or a valid string.",
-    "1 arg function or a valid string.",
-    "1 arg function or a valid string.",
-    "character vector.",
-    "non-empty vector.",
-    "non-empty vector.",
-    "TRUE.",
-    "TRUE.",
-    "TRUE.",
-    "TRUE.",
-    "FALSE.",
-    "TRUE.",
-    "finite numeric value.",
-    "finite numeric value.",
-    "positive integerish value.",
-    "positive integerish value.",
-    "positive integerish value.",
-    "positive integerish value.",
-    "positive integerish value.",
-    "positive integerish value.",
-    "boolean.",
-    "string.",
-    "character vector.",
-    "character vector.",
-    "character vector, or integerish vector, or list of string/integerish scalars.",
-    "list of character vectors, or integerish vectors, or lists of string/integerish scalars.",
-    "function or a valid string.",
-    "function or a valid string.",
-    "1 arg function or a valid string."
+  validation_rules <- as.data.frame(
+    do.call(rbind, validation),
+    stringsAsFactors = FALSE
   )
 
-  data_validation <- c(
-    "exists.",
-    "exists and inserts `default` if not.",
-    "applies function.",
-    "coerces.",
-    "type.",
-    "inherits from specified classes.",
-    "only values in `allowed` set.",
-    "no values in `forbidden` set.",
-    "no duplicates.",
-    "is positive (or zero).",
-    "is negative (or zero).",
-    "is finite.",
-    "no `NA` values.",
-    "is sorted.",
-    "values at least `min_val`.",
-    "values at most `max_val`.",
-    "length at least `min_length`.",
-    "length at most `max_length`.",
-    "nrow at least `min_nrow`.",
-    "nrow at most `max_nrow`.",
-    "nchar at least `min_nchar`.",
-    "nchar at most `max_nchar`.",
-    "no empty strings.",
-    "matches `regex` pattern.",
-    "has levels matching `levels` in any order.",
-    "has levels matching `ordered_levels` in order.",
-    "dependency field present.",
-    "dependency fields present.",
-    "satisfies predicate function.",
-    "applies function if no errors in node.",
-    "coerces if no errors in node."
+  rn <- rownames(validation_rules)
+  validation_rules <- cbind(
+    Rule = c("", paste0("`", rn[2:length(rn)], "`")),
+    validation_rules,
+    row.names = NULL
   )
 
-  control_flow <- c(
-    "FALSE and element not present.",
-    "default is used.",
-    rep("", length(vrules) - 2L)
+  names(validation_rules) <- c(
+    "Rule",
+    "Schema operation",
+    "Data operation",
+    "Control flow"
   )
 
-  validation_rules <- data.frame(
-    Rule = c("", paste0("`", vrules, "`")),
-    "Schema operation" = c("Checks schema value is:", schema_validation),
-    "Data operation" = c("Checks/transforms data element:", data_validation),
-    "Control flow" = c("Stops other rules if:", control_flow),
-    check.names = FALSE
-  )
-
-  crules <- c(
-    "dependency_and_dependencies",
-    "required_and_default",
-    "positive_and_negative",
-    "min_val_larger_than_max_val",
-    "min_length_larger_than_max_length",
-    "min_nrow_larger_than_max_nrow",
-    "min_nchar_larger_than_max_nchar",
-    "allowed_and_forbidden_overlap",
-    "allowed_type_mismatch",
-    "forbidden_type_mismatch"
-  )
-
-  cross_validation <- c(
-    "`dependency` and `dependencies` rules aren't both present.",
-    "if `required` is TRUE that a `default` value is not provided.",
-    "`positive` and `negative` rules aren't both present.",
-    "`min_val` is smaller than `max_val`.",
-    "`min_length` is smaller than `max_length`.",
-    "`min_nrow` is smaller than `max_nrow`.",
-    "`min_nchar` is smaller than `max_nchar`.",
-    "values in `allowed` and `forbidden` do not overlap.",
-    "values in `allowed` are of the type specified in `type`.",
-    "values in `forbidden` are of the type specified in `type`."
+  cross <- list(
+    dependency_and_dependencies =
+      "`dependency` and `dependencies` rules aren't both present.",
+    required_and_default =
+      "if `required` is TRUE that a `default` value is not provided.",
+    positive_and_negative =
+      "`positive` and `negative` rules aren't both present.",
+    min_val_larger_than_max_val =
+      "`min_val` is smaller than `max_val`.",
+    length_and_min_length =
+      "`length` and `min_length` aren't both present.",
+    length_and_max_length =
+      "`length` and `max_length` aren't both present.",
+    min_length_larger_than_max_length =
+      "`min_length` is smaller than `max_length`.",
+    min_nrow_larger_than_max_nrow =
+      "`min_nrow` is smaller than `max_nrow`.",
+    min_nchar_larger_than_max_nchar =
+      "`min_nchar` is smaller than `max_nchar`.",
+    allowed_and_forbidden_overlap =
+      "values in `allowed` and `forbidden` do not overlap.",
+    allowed_type_mismatch =
+      "values in `allowed` are of the type specified in `type`.",
+    forbidden_type_mismatch =
+      "values in `forbidden` are of the type specified in `type`."
   )
 
   cross_rules <- data.frame(
-    "Cross rule" = c(" ", paste0("`", crules, "`")),
-    "Schema operation" = c("Checks in a schema node that:", cross_validation),
-    check.names = FALSE
+    "Cross rule" = c(
+      " ",
+      paste0("`", names(cross), "`")
+    ),
+    "Schema operation" = c(
+      "Checks in a schema node that:",
+      unname(unlist(cross))
+    ),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   )
 
   as_fluffy_info <- function(x) {
@@ -845,7 +995,7 @@ show_builtins <- function(rules = c("all", "validation", "cross")) {
     )
   } else if (rules == "validation") {
     as_fluffy_info(validation_rules)
-  } else if (rules == "cross") {
+  } else {
     as_fluffy_info(cross_rules)
   }
 }

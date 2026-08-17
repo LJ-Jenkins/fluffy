@@ -74,6 +74,13 @@
 #' [adding custom rules](../doc/custom-rules.html).
 #' @seealso [add_rule] for adding rules to a `Registry`. [Validator] for
 #' validating data against a `Schema`.
+#' @note
+#' The `coerce` rule may use functions with multiple arguments when
+#' passed directly to a `Schema` or `Validator`. Only the field value is
+#' passed to the function, and any additional arguments are ignored. Thus,
+#' `as.numeric` is valid as a `coerce` rule in a schema definition, but cannot
+#' be added to a `Registry`, which enforces a strict one-argument function
+#' signature.
 #' @examples
 #' # A valid schema
 #' s <- Schema(list(

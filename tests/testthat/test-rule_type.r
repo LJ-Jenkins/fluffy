@@ -2,6 +2,7 @@ test_that("Schema type rule: valid string passes, others fail", {
   expect_true(Schema(list(type = function(x) x))@valid)
   expect_false(Schema(list(type = function(x, y) x))@valid)
   expect_false(Schema(list(type = function() NULL))@valid)
+  expect_true(Schema(list(type = is.numeric))@valid)
 
   # don't do str2fn conversion
   expect_false(Schema(list(type = r"{\(x) x}"))@valid)
@@ -54,7 +55,7 @@ test_that("Validator type rule: basic usage", {
   v <- Validator(
     list(x = "123", y = 123, z = list(x = 1, y = 2)),
     Schema(list(
-      x = list(type = function(x) is.numeric(x)),
+      x = list(type = is.numeric),
       y = list(type = function(x) is.character(x)),
       z = list(type = function(x) is.data.frame(x))
     ))
