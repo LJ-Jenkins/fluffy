@@ -217,7 +217,7 @@ r@str_to_fn_converter
 #>         NULL
 #>     })
 #> }
-#> <bytecode: 0x55f9f2598bd8>
+#> <bytecode: 0x55ca996215c8>
 #> <environment: namespace:fluffy>
 
 Schema(
@@ -226,7 +226,7 @@ Schema(
 #> $predicate
 #> function (x) 
 #> x > 10
-#> <environment: 0x55f9f3624a40>
+#> <environment: 0x55ca9a6ad060>
 ```
 
 ### Schema validation and errors
