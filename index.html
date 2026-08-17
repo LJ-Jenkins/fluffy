@@ -99,7 +99,7 @@
 <span>    <span class="op">)</span>,</span>
 <span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      type <span class="op">=</span> <span class="st">"character"</span>,</span>
-<span>      apply <span class="op">=</span> <span class="st">"function(x) trimws(x)"</span>,</span>
+<span>      apply <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/trimws.html" class="external-link">trimws</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
 <span>      nzchar <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
@@ -173,7 +173,7 @@
 <span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  schema <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>apply <span class="op">=</span> <span class="st">"function(x) x + 1"</span><span class="op">)</span>,</span>
-<span>    b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>apply <span class="op">=</span> <span class="st">"function(x, .data, ...) if (.data[['a']] &gt; 1) x + 1"</span><span class="op">)</span></span>
+<span>    b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>apply <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">.data</span>, <span class="va">...</span><span class="op">)</span> <span class="kw">if</span> <span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="st">"a"</span><span class="op">]</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">@</span><span class="va">data</span></span>
 <span><span class="co">#&gt; $a</span></span>

@@ -39,7 +39,7 @@ v <- Validator(
     ),
     y = list(
       type = "character",
-      apply = "function(x) trimws(x)",
+      apply = function(x) trimws(x),
       nzchar = TRUE
     )
   )
@@ -113,7 +113,7 @@ Validator(
   data = list(a = 1, b = 1),
   schema = list(
     a = list(apply = "function(x) x + 1"),
-    b = list(apply = "function(x, .data, ...) if (.data[['a']] > 1) x + 1")
+    b = list(apply = function(x, .data, ...) if (.data[["a"]] > 1) x + 1)
   )
 )@data
 #> $a
