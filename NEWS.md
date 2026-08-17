@@ -1,4 +1,4 @@
-# fluffy (development version)
+# fluffy 1.0.1
 
 ## New Features
 
