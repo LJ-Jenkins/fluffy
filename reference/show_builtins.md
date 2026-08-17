@@ -18,7 +18,7 @@ show_builtins(rules = c("all", "validation", "cross"))
 
 ## Value
 
-List of data.fames if `rules = "all"`, otherwise a single data.frame,
+List of data.frames if `rules = "all"`, otherwise a single data.frame,
 with information on the builtin rules for the rule type specified. The
 data.frame(s) have an attached class `fluffy_rule_info`.
 
@@ -60,6 +60,7 @@ show_builtins()
 #> |sorted        |TRUE.                 |is sorted.            |                      |
 #> |min_val       |finite numeric value. |values at least mi ...|                      |
 #> |max_val       |finite numeric value. |values at most max ...|                      |
+#> |length        |positive integeris ...|length exactly length.|                      |
 #> |min_length    |positive integeris ...|length at least mi ...|                      |
 #> |max_length    |positive integeris ...|length at most max ...|                      |
 #> |min_nrow      |positive integeris ...|nrow at least min_ ...|                      |
@@ -87,6 +88,8 @@ show_builtins()
 #> |required_and_default             |if required is TRUE that a default value is ...|
 #> |positive_and_negative            |positive and negative rules aren't both pre ...|
 #> |min_val_larger_than_max_val      |min_val is smaller than max_val.               |
+#> |length_and_min_length            |length and min_length aren't both present.     |
+#> |length_and_max_length            |length and max_length aren't both present.     |
 #> |min_length_larger_than_max_length|min_length is smaller than max_length.         |
 #> |min_nrow_larger_than_max_nrow    |min_nrow is smaller than max_nrow.             |
 #> |min_nchar_larger_than_max_nchar  |min_nchar is smaller than max_nchar.           |

@@ -82,6 +82,15 @@ validation](https://lj-jenkins.github.io/fluffy/doc/validating-data.md),
 and [adding custom
 rules](https://lj-jenkins.github.io/fluffy/doc/custom-rules.md).
 
+## Note
+
+The `coerce` rule may use functions with multiple arguments when passed
+directly to a `Schema` or `Validator`. Only the field value is passed to
+the function, and any additional arguments are ignored. Thus,
+`as.numeric` is valid as a `coerce` rule in a schema definition, but
+cannot be added to a `Registry`, which enforces a strict one-argument
+function signature.
+
 ## See also
 
 [add_rule](https://lj-jenkins.github.io/fluffy/reference/add_rule.md)

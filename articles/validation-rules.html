@@ -78,7 +78,7 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lj-jenkins.github.io/fluffy/">fluffy</a></span><span class="op">)</span></span></code></pre></div>
-<p>fluffy has 31 validation rules and 10 cross rules.</p>
+<p>fluffy has 32 validation rules and 12 cross rules.</p>
 <div class="section level3">
 <h3 id="validation-rules">Validation rules<a class="anchor" aria-label="anchor" href="#validation-rules"></a>
 </h3>
@@ -88,10 +88,10 @@
 <span><span class="co">#&gt;  [5] "type"           "inherits"       "allowed"        "forbidden"     </span></span>
 <span><span class="co">#&gt;  [9] "unique"         "positive"       "negative"       "finite"        </span></span>
 <span><span class="co">#&gt; [13] "allow_na"       "sorted"         "min_val"        "max_val"       </span></span>
-<span><span class="co">#&gt; [17] "min_length"     "max_length"     "min_nrow"       "max_nrow"      </span></span>
-<span><span class="co">#&gt; [21] "min_nchar"      "max_nchar"      "nzchar"         "regex"         </span></span>
-<span><span class="co">#&gt; [25] "levels"         "ordered_levels" "dependency"     "dependencies"  </span></span>
-<span><span class="co">#&gt; [29] "predicate"      "coerce_last"    "apply_last"</span></span></code></pre></div>
+<span><span class="co">#&gt; [17] "length"         "min_length"     "max_length"     "min_nrow"      </span></span>
+<span><span class="co">#&gt; [21] "max_nrow"       "min_nchar"      "max_nchar"      "nzchar"        </span></span>
+<span><span class="co">#&gt; [25] "regex"          "levels"         "ordered_levels" "dependency"    </span></span>
+<span><span class="co">#&gt; [29] "dependencies"   "predicate"      "coerce_last"    "apply_last"</span></span></code></pre></div>
 <p>The builtin rules are categorised by their type: ‘control’,
 ‘transform’, ‘validate’ and ‘finalize’. When the <code>Validator</code>
 is run, rules are applied in four passes according to these categories,
@@ -110,10 +110,10 @@ their respective <code>Registry</code> property.</p>
 <span><span class="co">#&gt;  [1] "type"           "inherits"       "allowed"        "forbidden"     </span></span>
 <span><span class="co">#&gt;  [5] "unique"         "positive"       "negative"       "finite"        </span></span>
 <span><span class="co">#&gt;  [9] "allow_na"       "sorted"         "min_val"        "max_val"       </span></span>
-<span><span class="co">#&gt; [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      </span></span>
-<span><span class="co">#&gt; [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         </span></span>
-<span><span class="co">#&gt; [21] "levels"         "ordered_levels" "dependency"     "dependencies"  </span></span>
-<span><span class="co">#&gt; [25] "predicate"</span></span>
+<span><span class="co">#&gt; [13] "length"         "min_length"     "max_length"     "min_nrow"      </span></span>
+<span><span class="co">#&gt; [17] "max_nrow"       "min_nchar"      "max_nchar"      "nzchar"        </span></span>
+<span><span class="co">#&gt; [21] "regex"          "levels"         "ordered_levels" "dependency"    </span></span>
+<span><span class="co">#&gt; [25] "dependencies"   "predicate"</span></span>
 <span><span class="va">r</span><span class="op">@</span><span class="va">finalize_rules</span></span>
 <span><span class="co">#&gt; [1] "coerce_last" "apply_last"</span></span></code></pre></div>
 <p>Each validation rule has two functions associated with it:</p>
@@ -424,6 +424,19 @@ values at most <code>max_val</code>.
 </tr>
 <tr>
 <td style="text-align:left;">
+<code>length</code>
+</td>
+<td style="text-align:left;">
+positive integerish value.
+</td>
+<td style="text-align:left;">
+length exactly <code>length</code>.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <code>min_length</code>
 </td>
 <td style="text-align:left;">
@@ -685,6 +698,22 @@ present.
 </tr>
 <tr>
 <td style="text-align:left;">
+<code>length_and_min_length</code>
+</td>
+<td style="text-align:left;">
+<code>length</code> and <code>min_length</code> aren’t both present.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<code>length_and_max_length</code>
+</td>
+<td style="text-align:left;">
+<code>length</code> and <code>max_length</code> aren’t both present.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 <code>min_length_larger_than_max_length</code>
 </td>
 <td style="text-align:left;">
@@ -755,7 +784,7 @@ values in <code>forbidden</code> are of the type specified in
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -111,6 +111,15 @@ to a <a href="Validator.html">Validator</a> the validation will fail immediately
 <a href="../doc/custom-rules.html">adding custom rules</a>.</p>
     </div>
     <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>The <code>coerce</code> rule may use functions with multiple arguments when
+passed directly to a <code>Schema</code> or <code>Validator</code>. Only the field value is
+passed to the function, and any additional arguments are ignored. Thus,
+<code>as.numeric</code> is valid as a <code>coerce</code> rule in a schema definition, but cannot
+be added to a <code>Registry</code>, which enforces a strict one-argument function
+signature.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><a href="add_rule.html">add_rule</a> for adding rules to a <code>Registry</code>. <a href="Validator.html">Validator</a> for
 validating data against a <code>Schema</code>.</p></div>
@@ -201,7 +210,7 @@ Boolean; <code>TRUE</code> if schema is valid, <code>FALSE</code> otherwise.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

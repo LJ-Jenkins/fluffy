@@ -263,10 +263,10 @@ specified type in the associated <code>Registry</code>:</p>
 <span><span class="co">#&gt;  [1] "type"           "inherits"       "allowed"        "forbidden"     </span></span>
 <span><span class="co">#&gt;  [5] "unique"         "positive"       "negative"       "finite"        </span></span>
 <span><span class="co">#&gt;  [9] "allow_na"       "sorted"         "min_val"        "max_val"       </span></span>
-<span><span class="co">#&gt; [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      </span></span>
-<span><span class="co">#&gt; [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         </span></span>
-<span><span class="co">#&gt; [21] "levels"         "ordered_levels" "dependency"     "dependencies"  </span></span>
-<span><span class="co">#&gt; [25] "predicate"</span></span>
+<span><span class="co">#&gt; [13] "length"         "min_length"     "max_length"     "min_nrow"      </span></span>
+<span><span class="co">#&gt; [17] "max_nrow"       "min_nchar"      "max_nchar"      "nzchar"        </span></span>
+<span><span class="co">#&gt; [21] "regex"          "levels"         "ordered_levels" "dependency"    </span></span>
+<span><span class="co">#&gt; [25] "dependencies"   "predicate"</span></span>
 <span><span class="va">r</span><span class="op">@</span><span class="va">finalize_rules</span> <span class="co"># fourth pass</span></span>
 <span><span class="co">#&gt; [1] "coerce_last" "apply_last"</span></span></code></pre></div>
 <p>The <code>rule_type</code> given must match one of these categories,
@@ -291,8 +291,13 @@ so the custom type/coerce rules will be applied alongside the builtin
 ones.</p>
 <p>These functions take the fluffy object, the name of the new schema
 type/coerce value, and a function that takes one argument, in the same
-vein as base R <code>is.*()</code> and <code>as.*()</code>
-functions.</p>
+vein as base R <code>is.*()</code> and <code>as.*()</code> functions.
+Note that the function must take a single argument, as the
+<code>Registry</code> will check the function signature and throw an
+error if it does not match. Functions that take multiple arguments can
+be used when passed directly to a <code>Schema</code> or
+<code>Validator</code>, but the additional arguments will be
+ignored.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/add_rule.html">add_type_rule</a></span><span class="op">(</span><span class="va">obj</span>, <span class="va">type_name</span>, <span class="va">type_fn</span><span class="op">)</span></span>
 <span></span>
@@ -464,7 +469,7 @@ schema.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -122,6 +122,11 @@ anything, whilst `.self` (the object itself: `Schema` for schema rules,
 schema/data in the respective walks) are named arguments and must be
 named as such.
 
+The `coerce` rule may use functions with multiple arguments when passed
+directly to a `Schema` or `Validator` (additional arguments are
+ignored), but `Registry` addition is stricter and enforces a single
+argument function signature.
+
 Despite
 [Registry](https://lj-jenkins.github.io/fluffy/reference/Registry.md)
 using environments to store rules, which are mutable, add_rule methods

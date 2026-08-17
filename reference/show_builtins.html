@@ -59,7 +59,7 @@ check for consistency between rules, or <code>"all"</code> to show both.</p></dd
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>List of data.fames if <code>rules = "all"</code>, otherwise a single data.frame,
+    <p>List of data.frames if <code>rules = "all"</code>, otherwise a single data.frame,
 with information on the builtin rules for the rule type specified.
 The data.frame(s) have an attached class <code>fluffy_rule_info</code>.</p>
     </div>
@@ -99,6 +99,7 @@ intended to be used for display/interactive purposes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |sorted        |TRUE.                 |is sorted.            |                      |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_val       |finite numeric value. |values at least mi ...|                      |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |max_val       |finite numeric value. |values at most max ...|                      |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |length        |positive integeris ...|length exactly length.|                      |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_length    |positive integeris ...|length at least mi ...|                      |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |max_length    |positive integeris ...|length at most max ...|                      |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_nrow      |positive integeris ...|nrow at least min_ ...|                      |</span>
@@ -126,6 +127,8 @@ intended to be used for display/interactive purposes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |required_and_default             |if required is TRUE that a default value is ...|</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |positive_and_negative            |positive and negative rules aren't both pre ...|</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_val_larger_than_max_val      |min_val is smaller than max_val.               |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |length_and_min_length            |length and min_length aren't both present.     |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |length_and_max_length            |length and max_length aren't both present.     |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_length_larger_than_max_length|min_length is smaller than max_length.         |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_nrow_larger_than_max_nrow    |min_nrow is smaller than max_nrow.             |</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> |min_nchar_larger_than_max_nchar  |min_nchar is smaller than max_nchar.           |</span>
@@ -145,7 +148,7 @@ intended to be used for display/interactive purposes.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

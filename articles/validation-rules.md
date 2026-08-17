@@ -5,7 +5,7 @@
 library(fluffy)
 ```
 
-fluffy has 31 validation rules and 10 cross rules.
+fluffy has 32 validation rules and 12 cross rules.
 
 ### Validation rules
 
@@ -16,10 +16,10 @@ Registry()@rule_names
 #>  [5] "type"           "inherits"       "allowed"        "forbidden"     
 #>  [9] "unique"         "positive"       "negative"       "finite"        
 #> [13] "allow_na"       "sorted"         "min_val"        "max_val"       
-#> [17] "min_length"     "max_length"     "min_nrow"       "max_nrow"      
-#> [21] "min_nchar"      "max_nchar"      "nzchar"         "regex"         
-#> [25] "levels"         "ordered_levels" "dependency"     "dependencies"  
-#> [29] "predicate"      "coerce_last"    "apply_last"
+#> [17] "length"         "min_length"     "max_length"     "min_nrow"      
+#> [21] "max_nrow"       "min_nchar"      "max_nchar"      "nzchar"        
+#> [25] "regex"          "levels"         "ordered_levels" "dependency"    
+#> [29] "dependencies"   "predicate"      "coerce_last"    "apply_last"
 ```
 
 The builtin rules are categorised by their type: ‘control’, ‘transform’,
@@ -42,10 +42,10 @@ r@validate_rules
 #>  [1] "type"           "inherits"       "allowed"        "forbidden"     
 #>  [5] "unique"         "positive"       "negative"       "finite"        
 #>  [9] "allow_na"       "sorted"         "min_val"        "max_val"       
-#> [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      
-#> [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         
-#> [21] "levels"         "ordered_levels" "dependency"     "dependencies"  
-#> [25] "predicate"
+#> [13] "length"         "min_length"     "max_length"     "min_nrow"      
+#> [17] "max_nrow"       "min_nchar"      "max_nchar"      "nzchar"        
+#> [21] "regex"          "levels"         "ordered_levels" "dependency"    
+#> [25] "dependencies"   "predicate"
 r@finalize_rules
 #> [1] "coerce_last" "apply_last"
 ```

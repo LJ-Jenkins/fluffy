@@ -180,10 +180,10 @@ r@validate_rules # third pass
 #>  [1] "type"           "inherits"       "allowed"        "forbidden"     
 #>  [5] "unique"         "positive"       "negative"       "finite"        
 #>  [9] "allow_na"       "sorted"         "min_val"        "max_val"       
-#> [13] "min_length"     "max_length"     "min_nrow"       "max_nrow"      
-#> [17] "min_nchar"      "max_nchar"      "nzchar"         "regex"         
-#> [21] "levels"         "ordered_levels" "dependency"     "dependencies"  
-#> [25] "predicate"
+#> [13] "length"         "min_length"     "max_length"     "min_nrow"      
+#> [17] "max_nrow"       "min_nchar"      "max_nchar"      "nzchar"        
+#> [21] "regex"          "levels"         "ordered_levels" "dependency"    
+#> [25] "dependencies"   "predicate"
 r@finalize_rules # fourth pass
 #> [1] "coerce_last" "apply_last"
 ```
@@ -210,7 +210,11 @@ builtin ones.
 
 These functions take the fluffy object, the name of the new schema
 type/coerce value, and a function that takes one argument, in the same
-vein as base R `is.*()` and `as.*()` functions.
+vein as base R `is.*()` and `as.*()` functions. Note that the function
+must take a single argument, as the `Registry` will check the function
+signature and throw an error if it does not match. Functions that take
+multiple arguments can be used when passed directly to a `Schema` or
+`Validator`, but the additional arguments will be ignored.
 
 ``` r
 
