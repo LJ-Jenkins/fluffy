@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fluffy</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,15 +38,15 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="fluffy-development-version">fluffy (development version)<a class="anchor" aria-label="anchor" href="#fluffy-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.1" id="fluffy-101">fluffy 1.0.1<a class="anchor" aria-label="anchor" href="#fluffy-101"></a></h2>
 <div class="section level3">
-<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-1-0-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-0-1"></a></h3>
 <ul><li><p>New <code>length</code> rule added to the <code>Registry</code>. This rule checks that the length of a data field is exactly equal to the value specified by the <code>length</code> schema field. This removes the need to specify both a <code>min_length</code> and <code>max_length</code> with the same value when enforcing an exact length.</p></li>
 <li><p>New <code>length_and_min_length</code> and <code>length_and_max_length</code> cross rules added to the <code>Registry</code>. These rules check that the <code>min_length</code> and <code>max_length</code> rules are not specified when a <code>length</code> rule is present.</p></li>
 <li><p>The <code>coerce</code> rule now accepts functions with multiple arguments when passed directly to a <code>Schema</code> or <code>Validator</code>, allowing base <code>as.*()</code> functions to be used as <code>coerce</code> rules in schema definitions. However, only the field value is passed to the function; any additional arguments are ignored. Functions with multiple arguments still cannot be added to the <code>Registry@coerce_map</code>, as <code><a href="../reference/add_rule.html">add_coerce_rule()</a></code> enforces a strict one-argument function signature.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-1-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-0-1"></a></h3>
 <ul><li><p>Fixed the <code>allowed_type_mismatch</code> and <code>forbidden_type_mismatch</code> cross rules so that they use the <code>Registry@type_map</code> to obtain the function used for type checking when <code>type</code> is a string, and use the supplied function directly when <code>type</code> is a function. Previously, function-valued <code>type</code> fields caused an error, while character-valued <code>type</code> fields could result in incorrect type checking because the class of the <code>allowed</code>/<code>forbidden</code> field was compared directly with the <code>type</code> field. This could produce false positives, such as an integer <code>allowed</code>/<code>forbidden</code> field being flagged as a type mismatch when <code>type</code> was “numeric”.</p></li>
 <li><p>Fixed incorrect argument-count checking for the <code>type</code>, <code>predicate</code>, and <code>apply</code> rules.</p></li>
 </ul></div>
