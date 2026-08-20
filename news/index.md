@@ -2,6 +2,8 @@
 
 ## fluffy 1.0.1
 
+CRAN release: 2026-08-20
+
 ### New Features
 
 - New `length` rule added to the `Registry`. This rule checks that the

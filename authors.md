@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/LJ-Jenkins/fluffy/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/LJ-Jenkins/fluffy/blob/v1.0.1/DESCRIPTION)
 
 Jenkins L (2026). *fluffy: Schema-Based Validation of 'R' Objects with
 User-Defined Rules*. R package version 1.0.1,
