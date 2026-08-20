@@ -426,7 +426,7 @@ For detailed information on using fluffy, see the vignettes:
 ## Notes
 
 fluffy was inspired by and modelled on Python’s
-[Cerberus](https://docs.python-cerberus.org/) (hence the name!).
+[Cerberus](https://github.com/pyeve/cerberus) (hence the name!).
 
 Error printing in fluffy was modelled on
 [lobstr](https://lobstr.r-lib.org/)’s tree function.
