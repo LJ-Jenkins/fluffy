@@ -217,7 +217,7 @@ r@str_to_fn_converter
 #>         NULL
 #>     })
 #> }
-#> <bytecode: 0x55ca996215c8>
+#> <bytecode: 0x5582d7c6ff98>
 #> <environment: namespace:fluffy>
 
 Schema(
@@ -226,7 +226,7 @@ Schema(
 #> $predicate
 #> function (x) 
 #> x > 10
-#> <environment: 0x55ca9a6ad060>
+#> <environment: 0x5582d8cfb8c0>
 ```
 
 ### Schema validation and errors
@@ -398,13 +398,13 @@ original state of the data. See the following example:
 s <- Schema(
   list(
     list(
-      apply = "function(x, .data, ...) if (.data[[2]] == 1) x + 1"
+      apply = function(x, .data, ...) if (.data[[2]] == 1) x + 1
     ),
     list(
       apply = "function(x, .data, ...) if (.data[[2]] == 0) x + 1"
     ),
     list(
-      apply = "function(x, .data, ...) if (.data[[2]] == 1) x + 2"
+      apply = function(x, .data, ...) if (.data[[2]] == 1) x + 2
     ),
     list(
       apply = "function(x, .data, ...) if (.data[[3]] == 2) x + 3"

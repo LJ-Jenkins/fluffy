@@ -265,7 +265,7 @@ the <code>@str_to_fn_rules</code> property an empty character.</p>
 <span><span class="co">#&gt;         NULL</span></span>
 <span><span class="co">#&gt;     })</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55ca996215c8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5582d7c6ff98&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:fluffy&gt;</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/Schema.html">Schema</a></span><span class="op">(</span></span>
@@ -274,7 +274,7 @@ the <code>@str_to_fn_rules</code> property an empty character.</p>
 <span><span class="co">#&gt; $predicate</span></span>
 <span><span class="co">#&gt; function (x) </span></span>
 <span><span class="co">#&gt; x &gt; 10</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x55ca9a6ad060&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;environment: 0x5582d8cfb8c0&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -436,13 +436,13 @@ the original state of the data. See the following example:</p>
 <code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Schema.html">Schema</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      apply <span class="op">=</span> <span class="st">"function(x, .data, ...) if (.data[[2]] == 1) x + 1"</span></span>
+<span>      apply <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">.data</span>, <span class="va">...</span><span class="op">)</span> <span class="kw">if</span> <span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      apply <span class="op">=</span> <span class="st">"function(x, .data, ...) if (.data[[2]] == 0) x + 1"</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      apply <span class="op">=</span> <span class="st">"function(x, .data, ...) if (.data[[2]] == 1) x + 2"</span></span>
+<span>      apply <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">.data</span>, <span class="va">...</span><span class="op">)</span> <span class="kw">if</span> <span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="va">x</span> <span class="op">+</span> <span class="fl">2</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      apply <span class="op">=</span> <span class="st">"function(x, .data, ...) if (.data[[3]] == 2) x + 3"</span></span>
