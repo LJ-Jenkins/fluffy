@@ -258,13 +258,13 @@ fluffy validation can access transformed data elements on the fly, so any rules 
 s <- Schema(
   list(
     list(
-      apply = "function(x, .data, ...) if (.data[[2]] == 1) x + 1"
+      apply = function(x, .data, ...) if (.data[[2]] == 1) x + 1
     ),
     list(
       apply = "function(x, .data, ...) if (.data[[2]] == 0) x + 1"
     ),
     list(
-      apply = "function(x, .data, ...) if (.data[[2]] == 1) x + 2"
+      apply = function(x, .data, ...) if (.data[[2]] == 1) x + 2
     ),
     list(
       apply = "function(x, .data, ...) if (.data[[3]] == 2) x + 3"
